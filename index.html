@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HARROW | Critical Challenge</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="game">
+
+        <!-- HEADER -->
+        <header class="game-header">
+
+            <div class="brand">
+                <h1>HARROW</h1>
+                <p>CRITICAL CHALLENGE</p>
+            </div>
+
+            <div class="level-info">
+                <span>LEVEL</span>
+                <strong id="levelNumber">01</strong>
+            </div>
+
+            <div class="lives">
+                <span id="life1">❤️</span>
+                <span id="life2">❤️</span>
+                <span id="life3">❤️</span>
+            </div>
+
+        </header>
+
+
+        <!-- PROGRESS -->
+        <div class="progress-area">
+
+            <div class="progress-text">
+                <span id="progressText">LEVEL 1 / 50</span>
+                <span id="difficulty">EASY</span>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progressFill"></div>
+            </div>
+
+        </div>
+
+
+        <!-- MAIN CHALLENGE -->
+        <main id="gameArea">
+
+            <div class="challenge-card">
+
+                <div class="challenge-type" id="challengeType">
+                    CHALLENGE
+                </div>
+
+                <h2 id="question">
+                    Loading challenge...
+                </h2>
+
+                <div id="options" class="options">
+                    <!-- Options will appear here -->
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- MESSAGE -->
+        <div id="message" class="message hidden">
+            <p id="messageText"></p>
+        </div>
+
+
+        <!-- NEXT BUTTON -->
+        <button id="nextButton" class="next-button hidden">
+            NEXT LEVEL →
+        </button>
+
+
+        <!-- GAME OVER -->
+        <section id="gameOver" class="overlay hidden">
+
+            <div class="overlay-box">
+
+                <div class="overlay-icon">💀</div>
+
+                <h2>GAME OVER</h2>
+
+                <p>
+                    All three lives are gone.
+                </p>
+
+                <p class="small-text">
+                    The challenge isn't finished yet.
+                </p>
+
+                <button id="retryButton">
+                    TRY AGAIN
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- VICTORY -->
+        <section id="victory" class="overlay hidden">
+
+            <div class="overlay-box">
+
+                <div class="overlay-icon">👑</div>
+
+                <h2>LEVEL 50 COMPLETE</h2>
+
+                <p>
+                    You reached the end.
+                </p>
+
+                <p class="mystery">
+                    Or did you?
+                </p>
+
+                <button id="secretButton">
+                    CONTINUE
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- IMPORTANT:
+         levels.js must load BEFORE script.js
+    -->
+
+    <script src="levels.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
