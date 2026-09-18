@@ -1,66 +1,13 @@
-const levels = [
-    {
-        name: "LEVEL 01 — INITIALIZE",
-        size: 4,
-        arrows: [
-            "→", "↓", "↓", "←",
-            "↑", "→", "←", "↓",
-            "↑", "↑", "→", "←",
-            "→", "↑", "↑", "←"
-        ]
-    },
+/* =========================================================
+   ARROW // 19.09
+   Arrow Letter Puzzle Engine
+   Uses levels from levels.js
+========================================================= */
 
-    {
-        name: "LEVEL 02 — DEBUG",
-        size: 5,
-        arrows: [
-            "→", "↓", "↓", "←", "↓",
-            "↑", "→", "→", "↓", "←",
-            "↑", "↑", "←", "↓", "↓",
-            "→", "↑", "→", "←", "↑",
-            "→", "→", "↑", "↑", "←"
-        ]
-    },
 
-    {
-        name: "LEVEL 03 — BUILD",
-        size: 5,
-        arrows: [
-            "↓", "→", "↓", "←", "↓",
-            "↑", "→", "←", "↓", "←",
-            "↑", "↑", "→", "←", "↓",
-            "→", "↑", "→", "↑", "←",
-            "→", "↓", "↑", "→", "←"
-        ]
-    },
-
-    {
-        name: "LEVEL 04 — GUIDE",
-        size: 6,
-        arrows: [
-            "→", "↓", "↓", "←", "↓", "↓",
-            "↑", "→", "→", "↓", "←", "↓",
-            "↑", "↑", "→", "←", "↓", "↓",
-            "→", "↑", "→", "↓", "↑", "←",
-            "→", "↓", "↑", "→", "←", "↑",
-            "→", "→", "↑", "↓", "↑", "←"
-        ]
-    },
-
-    {
-        name: "LEVEL 05 — 19.09",
-        size: 6,
-        arrows: [
-            "→", "↓", "→", "←", "↓", "↓",
-            "↑", "→", "↓", "↓", "←", "↓",
-            "↑", "↑", "→", "←", "↓", "←",
-            "→", "↑", "→", "↓", "↑", "←",
-            "→", "↓", "↑", "→", "←", "↑",
-            "→", "→", "↑", "↓", "→", "←"
-        ]
-    }
-];
-
+/* =========================================================
+   GAME STATE
+========================================================= */
 
 let currentLevel = 0;
 let board = [];
@@ -70,9 +17,9 @@ let timerInterval = null;
 let deferredInstallPrompt = null;
 
 
-/* =========================
+/* =========================================================
    ELEMENTS
-========================= */
+========================================================= */
 
 const startScreen = document.getElementById("startScreen");
 const gameScreen = document.getElementById("gameScreen");
@@ -97,29 +44,44 @@ const finalMoves = document.getElementById("finalMoves");
 const finalTime = document.getElementById("finalTime");
 
 
-/* =========================
+/* =========================================================
    SCREEN CONTROL
-========================= */
+========================================================= */
 
 function showScreen(screen) {
 
-    document.querySelectorAll(".screen").forEach(s => {
-        s.classList.remove("active");
+    document.querySelectorAll(".screen").forEach(screenItem => {
+        screenItem.classList.remove("active");
     });
 
-    screen.classList.add("active");
+    if (screen) {
+        screen.classList.add("active");
+    }
 }
 
 
-/* =========================
+/* =========================================================
    START GAME
-========================= */
+========================================================= */
 
-startBtn.addEventListener("click", () => {
-    currentLevel = 0;
-    startLevel();
-});
+if (startBtn) {
 
+    startBtn.addEventListener("click", () => {
+
+        currentLevel = 0;
+
+        seconds = 0;
+
+        startLevel();
+
+    });
+
+}
+
+
+/* =========================================================
+   START LEVEL
+========================================================= */
 
 function startLevel() {
 
@@ -128,38 +90,59 @@ function startLevel() {
     loadLevel();
 
     startTimer();
+
 }
 
 
-/* =========================
+/* =========================================================
    LOAD LEVEL
-========================= */
+========================================================= */
 
 function loadLevel() {
 
     const level = levels[currentLevel];
 
+    if (!level) {
+        showFinal();
+        return;
+    }
+
     levelName.textContent = level.name;
 
     moves = 0;
 
-    movesElement.textContent = moves;
+    movesElement.textContent = "0";
 
     messageElement.textContent =
         "Clear the arrows. Think before you move.";
 
+    /*
+       Create board.
+
+       Empty cells are marked as empty.
+       Arrow cells become playable pieces.
+    */
+
     board = level.arrows.map(direction => ({
-        direction,
-        removed: false
+
+        direction: direction,
+
+        removed: false,
+
+        empty: direction === "" ||
+               direction === null ||
+               direction === undefined
+
     }));
 
     renderBoard();
+
 }
 
 
-/* =========================
+/* =========================================================
    RENDER BOARD
-========================= */
+========================================================= */
 
 function renderBoard() {
 
@@ -168,124 +151,329 @@ function renderBoard() {
     boardElement.innerHTML = "";
 
     boardElement.style.gridTemplateColumns =
-        `repeat(${level.size}, 1fr)`;
+        `repeat(${level.size}, minmax(0, 1fr))`;
+
+    boardElement.style.gridTemplateRows =
+        `repeat(${level.size}, minmax(0, 1fr))`;
+
 
     board.forEach((cell, index) => {
 
-        const cellElement = document.createElement("div");
+        const cellElement =
+            document.createElement("div");
 
         cellElement.className = "cell";
 
-        if (cell.removed) {
-            cellElement.style.visibility = "hidden";
+
+        /* EMPTY CELL */
+
+        if (cell.empty) {
+
+            cellElement.classList.add("empty");
+
+            boardElement.appendChild(cellElement);
+
+            return;
         }
 
-        const arrow = document.createElement("div");
+
+        /* REMOVED ARROW */
+
+        if (cell.removed) {
+
+            cellElement.classList.add("removed");
+
+            boardElement.appendChild(cellElement);
+
+            return;
+        }
+
+
+        /* ARROW */
+
+        const arrow =
+            document.createElement("div");
 
         arrow.className = "arrow";
 
         arrow.textContent = cell.direction;
 
-        cellElement.appendChild(arrow);
 
-        if (!cell.removed) {
+        /*
+           Add direction class.
+           Useful for CSS animation.
+        */
 
-            if (canEscape(index)) {
-                cellElement.classList.add("escape");
-            } else {
-                cellElement.classList.add("blocked");
-            }
-
-            cellElement.addEventListener("click", () => {
-                moveArrow(index, cellElement);
-            });
+        if (cell.direction === "↑") {
+            arrow.classList.add("arrow-up");
         }
 
+        if (cell.direction === "↓") {
+            arrow.classList.add("arrow-down");
+        }
+
+        if (cell.direction === "←") {
+            arrow.classList.add("arrow-left");
+        }
+
+        if (cell.direction === "→") {
+            arrow.classList.add("arrow-right");
+        }
+
+
+        cellElement.appendChild(arrow);
+
+
+        /*
+           Show whether this arrow can currently escape.
+        */
+
+        if (canEscape(index)) {
+
+            cellElement.classList.add("escape");
+
+        } else {
+
+            cellElement.classList.add("blocked");
+
+        }
+
+
+        /*
+           Click arrow.
+        */
+
+        cellElement.addEventListener(
+            "click",
+            () => moveArrow(index, cellElement)
+        );
+
+
         boardElement.appendChild(cellElement);
+
     });
+
 }
 
 
-/* =========================
-   CHECK ESCAPE
-========================= */
+/* =========================================================
+   GET POSITION
+========================================================= */
 
-function canEscape(index) {
+function getPosition(index) {
 
     const size = levels[currentLevel].size;
 
-    const row = Math.floor(index / size);
-    const col = index % size;
+    return {
 
-    const direction = board[index].direction;
+        row: Math.floor(index / size),
 
-    let r = row;
-    let c = col;
+        col: index % size
 
-    while (true) {
+    };
 
-        if (direction === "↑") r--;
-        if (direction === "↓") r++;
-        if (direction === "←") c--;
-        if (direction === "→") c++;
-
-        // Outside board
-        if (
-            r < 0 ||
-            r >= size ||
-            c < 0 ||
-            c >= size
-        ) {
-            return true;
-        }
-
-        const nextIndex = r * size + c;
-
-        if (!board[nextIndex].removed) {
-            return false;
-        }
-    }
 }
 
 
-/* =========================
+/* =========================================================
+   GET NEXT CELL
+========================================================= */
+
+function getNextIndex(index, direction) {
+
+    const size = levels[currentLevel].size;
+
+    const position = getPosition(index);
+
+    let row = position.row;
+
+    let col = position.col;
+
+
+    if (direction === "↑") {
+        row--;
+    }
+
+    if (direction === "↓") {
+        row++;
+    }
+
+    if (direction === "←") {
+        col--;
+    }
+
+    if (direction === "→") {
+        col++;
+    }
+
+
+    /*
+       Outside board.
+    */
+
+    if (
+        row < 0 ||
+        row >= size ||
+        col < 0 ||
+        col >= size
+    ) {
+
+        return -1;
+
+    }
+
+
+    return row * size + col;
+
+}
+
+
+/* =========================================================
+   CHECK ESCAPE
+========================================================= */
+
+function canEscape(index) {
+
+    const cell = board[index];
+
+    /*
+       Empty or already removed cells
+       cannot be played.
+    */
+
+    if (
+        !cell ||
+        cell.empty ||
+        cell.removed
+    ) {
+
+        return false;
+
+    }
+
+
+    let currentIndex = index;
+
+
+    /*
+       Follow the arrow until:
+
+       1. It leaves the board → ESCAPE
+       2. It hits another active arrow → BLOCKED
+    */
+
+    while (true) {
+
+        const nextIndex =
+            getNextIndex(
+                currentIndex,
+                cell.direction
+            );
+
+
+        /*
+           Arrow reaches outside board.
+        */
+
+        if (nextIndex === -1) {
+
+            return true;
+
+        }
+
+
+        /*
+           If the next cell contains
+           an active arrow, path is blocked.
+        */
+
+        const nextCell = board[nextIndex];
+
+        if (
+            nextCell &&
+            !nextCell.empty &&
+            !nextCell.removed
+        ) {
+
+            return false;
+
+        }
+
+
+        /*
+           Empty/removed cells can be crossed.
+        */
+
+        currentIndex = nextIndex;
+
+    }
+
+}
+
+
+/* =========================================================
    MOVE ARROW
-========================= */
+========================================================= */
 
 function moveArrow(index, element) {
 
-    if (board[index].removed) return;
+    const cell = board[index];
+
+    if (
+        !cell ||
+        cell.empty ||
+        cell.removed
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       BLOCKED ARROW
+    */
 
     if (!canEscape(index)) {
 
         messageElement.textContent =
-            "PATH BLOCKED — try another arrow.";
+            "PATH BLOCKED — clear the arrow ahead first.";
 
-        element.animate(
-            [
-                { transform: "translateX(0)" },
-                { transform: "translateX(-5px)" },
-                { transform: "translateX(5px)" },
-                { transform: "translateX(0)" }
-            ],
-            {
-                duration: 220
-            }
-        );
+        element.classList.remove("shake");
+
+        /*
+           Force browser to restart animation.
+        */
+
+        void element.offsetWidth;
+
+        element.classList.add("shake");
 
         return;
+
     }
 
-    board[index].removed = true;
+
+    /*
+       VALID MOVE
+    */
+
+    cell.removed = true;
 
     moves++;
 
     movesElement.textContent = moves;
 
-    element.classList.add("removing");
-
     messageElement.textContent =
         "PATH CLEAR ✓";
+
+
+    /*
+       Remove animation.
+    */
+
+    element.classList.add("removing");
+
 
     setTimeout(() => {
 
@@ -293,163 +481,365 @@ function moveArrow(index, element) {
 
         checkComplete();
 
-    }, 220);
+    }, 230);
+
 }
 
 
-/* =========================
-   CHECK COMPLETE
-========================= */
+/* =========================================================
+   CHECK LEVEL COMPLETE
+========================================================= */
 
 function checkComplete() {
 
-    const remaining = board.filter(
-        cell => !cell.removed
-    ).length;
+    const remaining =
+        board.filter(cell =>
+            !cell.empty &&
+            !cell.removed
+        ).length;
 
-    if (remaining === 0) {
 
-        stopTimer();
+    if (remaining !== 0) {
 
-        finalMoves.textContent = moves;
+        return;
 
-        finalTime.textContent =
-            formatTime(seconds);
-
-        setTimeout(() => {
-
-            showScreen(completeScreen);
-
-        }, 350);
     }
+
+
+    stopTimer();
+
+
+    /*
+       Save current level statistics.
+    */
+
+    if (finalMoves) {
+        finalMoves.textContent = moves;
+    }
+
+    if (finalTime) {
+        finalTime.textContent = formatTime(seconds);
+    }
+
+
+    /*
+       Show completed letter if available.
+    */
+
+    const level = levels[currentLevel];
+
+
+    setTimeout(() => {
+
+        showLevelComplete(level);
+
+    }, 350);
+
 }
 
 
-/* =========================
-   NEXT LEVEL
-========================= */
+/* =========================================================
+   LEVEL COMPLETE SCREEN
+========================================================= */
 
-nextBtn.addEventListener("click", () => {
+function showLevelComplete(level) {
 
-    currentLevel++;
+    showScreen(completeScreen);
 
-    if (currentLevel >= levels.length) {
 
-        showFinal();
+    /*
+       Try to find an existing letter element.
+       If it doesn't exist, create one.
+    */
 
-        return;
+    let letterElement =
+        document.getElementById("completedLetter");
+
+
+    if (!letterElement) {
+
+        letterElement =
+            document.createElement("div");
+
+        letterElement.id = "completedLetter";
+
+        letterElement.className =
+            "completed-letter";
+
+        const completeContent =
+            completeScreen.querySelector(
+                ".complete-content"
+            );
+
+        if (completeContent) {
+
+            completeContent.insertBefore(
+                letterElement,
+                completeContent.firstChild
+            );
+
+        }
+
     }
 
-    startLevel();
-});
+
+    /*
+       Show the letter using the
+       level's letter property.
+    */
+
+    if (level.letter) {
+
+        letterElement.textContent =
+            level.letter;
+
+        letterElement.style.display =
+            "block";
+
+    } else {
+
+        letterElement.style.display =
+            "none";
+
+    }
 
 
-/* =========================
-   FINAL
-========================= */
+    /*
+       Last level?
+    */
+
+    if (currentLevel === levels.length - 1) {
+
+        if (nextBtn) {
+
+            nextBtn.textContent =
+                "FINISH →";
+
+        }
+
+    } else {
+
+        if (nextBtn) {
+
+            nextBtn.textContent =
+                "NEXT LETTER →";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   NEXT LEVEL
+========================================================= */
+
+if (nextBtn) {
+
+    nextBtn.addEventListener("click", () => {
+
+        currentLevel++;
+
+        if (currentLevel >= levels.length) {
+
+            showFinal();
+
+            return;
+
+        }
+
+        startLevel();
+
+    });
+
+}
+
+
+/* =========================================================
+   FINAL SCREEN
+========================================================= */
 
 function showFinal() {
 
     stopTimer();
 
     showScreen(finalScreen);
+
+
+    /*
+       Add final name reveal if the
+       final screen doesn't already contain one.
+    */
+
+    let nameReveal =
+        document.getElementById("nameReveal");
+
+
+    if (!nameReveal) {
+
+        nameReveal =
+            document.createElement("div");
+
+        nameReveal.id = "nameReveal";
+
+        nameReveal.className =
+            "name-reveal";
+
+        nameReveal.innerHTML = `
+            <div class="name-small">
+                THE ARROWS REVEALED
+            </div>
+
+            <div class="name-main">
+                PRUTHVIRAJ
+            </div>
+
+            <div class="name-sub">
+                CODE BLASTER
+            </div>
+        `;
+
+
+        const finalContent =
+            finalScreen.querySelector(
+                ".final-content"
+            );
+
+
+        if (finalContent) {
+
+            finalContent.insertBefore(
+                nameReveal,
+                finalContent.firstChild
+            );
+
+        }
+
+    }
+
 }
 
 
-playAgainBtn.addEventListener("click", () => {
+/* =========================================================
+   PLAY AGAIN
+========================================================= */
 
-    currentLevel = 0;
+if (playAgainBtn) {
 
-    startLevel();
-});
+    playAgainBtn.addEventListener("click", () => {
+
+        currentLevel = 0;
+
+        seconds = 0;
+
+        startLevel();
+
+    });
+
+}
 
 
-/* =========================
+/* =========================================================
    RESTART
-========================= */
+========================================================= */
 
-restartBtn.addEventListener("click", () => {
+if (restartBtn) {
 
-    stopTimer();
+    restartBtn.addEventListener("click", () => {
 
-    seconds = 0;
+        stopTimer();
 
-    timerElement.textContent = "00:00";
+        loadLevel();
 
-    loadLevel();
+        startTimer();
 
-    startTimer();
-});
+    });
+
+}
 
 
-/* =========================
+/* =========================================================
    HINT
-========================= */
+========================================================= */
 
-hintBtn.addEventListener("click", () => {
+if (hintBtn) {
 
-    const available = board
-        .map((cell, index) => ({
-            cell,
-            index
-        }))
-        .filter(item =>
-            !item.cell.removed &&
-            canEscape(item.index)
-        );
+    hintBtn.addEventListener("click", () => {
 
-    if (available.length === 0) {
+        const available =
+            board
+                .map((cell, index) => ({
+                    cell,
+                    index
+                }))
+                .filter(item =>
+                    !item.cell.empty &&
+                    !item.cell.removed &&
+                    canEscape(item.index)
+                );
+
+
+        if (available.length === 0) {
+
+            messageElement.textContent =
+                "No clear arrow. Check the paths.";
+
+            return;
+
+        }
+
+
+        /*
+           Pick a random currently
+           playable arrow.
+        */
+
+        const chosen =
+            available[
+                Math.floor(
+                    Math.random() *
+                    available.length
+                )
+            ];
+
+
+        const cells =
+            boardElement.querySelectorAll(
+                ".cell"
+            );
+
+
+        const target =
+            cells[chosen.index];
+
+
+        if (target) {
+
+            target.classList.remove(
+                "hint-pulse"
+            );
+
+            void target.offsetWidth;
+
+            target.classList.add(
+                "hint-pulse"
+            );
+
+        }
+
 
         messageElement.textContent =
-            "No clear path. Restart the level.";
+            "HINT — Try the highlighted arrow.";
 
-        return;
-    }
+    });
 
-    const chosen =
-        available[
-            Math.floor(
-                Math.random() * available.length
-            )
-        ];
-
-    const cells =
-        boardElement.querySelectorAll(".cell");
-
-    const target =
-        cells[chosen.index];
-
-    if (target) {
-
-        target.animate(
-            [
-                {
-                    transform: "scale(1)",
-                    boxShadow: "0 0 0 rgba(201,169,110,0)"
-                },
-                {
-                    transform: "scale(1.12)",
-                    boxShadow: "0 0 25px rgba(201,169,110,.45)"
-                },
-                {
-                    transform: "scale(1)",
-                    boxShadow: "0 0 0 rgba(201,169,110,0)"
-                }
-            ],
-            {
-                duration: 800
-            }
-        );
-    }
-
-    messageElement.textContent =
-        "HINT: Look at the highlighted arrow.";
-});
+}
 
 
-/* =========================
+/* =========================================================
    TIMER
-========================= */
+========================================================= */
 
 function startTimer() {
 
@@ -457,16 +847,20 @@ function startTimer() {
 
     seconds = 0;
 
-    timerElement.textContent = "00:00";
+    timerElement.textContent =
+        "00:00";
 
-    timerInterval = setInterval(() => {
 
-        seconds++;
+    timerInterval =
+        setInterval(() => {
 
-        timerElement.textContent =
-            formatTime(seconds);
+            seconds++;
 
-    }, 1000);
+            timerElement.textContent =
+                formatTime(seconds);
+
+        }, 1000);
+
 }
 
 
@@ -477,7 +871,9 @@ function stopTimer() {
         clearInterval(timerInterval);
 
         timerInterval = null;
+
     }
+
 }
 
 
@@ -488,18 +884,21 @@ function formatTime(totalSeconds) {
             .toString()
             .padStart(2, "0");
 
+
     const secs =
         (totalSeconds % 60)
             .toString()
             .padStart(2, "0");
 
+
     return `${minutes}:${secs}`;
+
 }
 
 
-/* =========================
+/* =========================================================
    PWA INSTALL
-========================= */
+========================================================= */
 
 window.addEventListener(
     "beforeinstallprompt",
@@ -509,67 +908,114 @@ window.addEventListener(
 
         deferredInstallPrompt = event;
 
-        installBtn.style.display = "inline-block";
+
+        if (installBtn) {
+
+            installBtn.style.display =
+                "inline-block";
+
+        }
+
     }
 );
 
 
-installBtn.addEventListener("click", async () => {
+if (installBtn) {
 
-    if (!deferredInstallPrompt) {
+    installBtn.addEventListener(
+        "click",
+        async () => {
 
-        messageElement.textContent =
-            "Use your browser menu to install the game.";
+            if (!deferredInstallPrompt) {
 
-        return;
-    }
+                messageElement.textContent =
+                    "Use your browser menu to install the game.";
 
-    deferredInstallPrompt.prompt();
+                return;
 
-    const result =
-        await deferredInstallPrompt.userChoice;
+            }
 
-    if (result.outcome === "accepted") {
 
-        installBtn.textContent =
-            "✓ INSTALLED";
+            deferredInstallPrompt.prompt();
 
-    }
 
-    deferredInstallPrompt = null;
-});
+            const result =
+                await deferredInstallPrompt.userChoice;
+
+
+            if (
+                result.outcome === "accepted"
+            ) {
+
+                installBtn.textContent =
+                    "✓ INSTALLED";
+
+            }
+
+
+            deferredInstallPrompt = null;
+
+        }
+    );
+
+}
 
 
 window.addEventListener(
     "appinstalled",
     () => {
 
-        installBtn.textContent =
-            "✓ GAME INSTALLED";
+        if (installBtn) {
+
+            installBtn.textContent =
+                "✓ GAME INSTALLED";
+
+        }
 
     }
 );
 
 
-/* =========================
+/* =========================================================
    SERVICE WORKER
-========================= */
+========================================================= */
 
 if ("serviceWorker" in navigator) {
 
-    window.addEventListener("load", () => {
+    window.addEventListener(
+        "load",
+        () => {
 
-        navigator.serviceWorker
-            .register("sw.js")
-            .then(() => {
-                console.log("PWA ready");
-            })
-            .catch(error => {
-                console.log(
-                    "Service worker error:",
-                    error
-                );
-            });
+            navigator.serviceWorker
+                .register("./sw.js")
+                .then(() => {
 
-    });
+                    console.log(
+                        "ARROW//19.09 PWA ready"
+                    );
+
+                })
+                .catch(error => {
+
+                    console.log(
+                        "Service worker error:",
+                        error
+                    );
+
+                });
+
+        }
+    );
+
 }
+
+
+/* =========================================================
+   DEBUG
+========================================================= */
+
+console.log(
+    "ARROW//19.09 loaded",
+    levels.length,
+    "levels"
+);
