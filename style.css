@@ -5,14 +5,19 @@
 }
 
 :root {
-    --background: #050608;
-    --panel: #0b0f13;
-    --text: #f5f7fa;
-    --muted: #89919c;
+    --bg: #050505;
+    --board: #080909;
+    --line: #ffffff;
+    --text: #f5f5f5;
+    --muted: #858585;
     --green: #00ff9d;
     --red: #ff4057;
-    --yellow: #ffd166;
 }
+
+
+/* =========================================
+   BODY
+========================================= */
 
 html,
 body {
@@ -24,44 +29,46 @@ body {
     min-height: 100vh;
 
     font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+        "Courier New",
+        monospace;
 
     color: var(--text);
 
     background:
         radial-gradient(
             circle at top,
-            #17211e 0%,
-            #080a0c 35%,
-            #030405 100%
+            #111816,
+            #050606 45%,
+            #020202
         );
 }
 
 
-/* =====================================
-   CONTAINER
-===================================== */
+/* =========================================
+   MAIN CONTAINER
+========================================= */
 
 .game-container {
+
     width: 100%;
-    max-width: 1450px;
+
+    max-width: 1500px;
 
     margin: auto;
 
     padding:
-        30px
-        40px
+        25px
+        35px
         40px;
 }
 
 
-/* =====================================
+/* =========================================
    HEADER
-===================================== */
+========================================= */
 
 .top-bar {
+
     display: grid;
 
     grid-template-columns:
@@ -71,33 +78,31 @@ body {
 
     align-items: center;
 
-    gap: 30px;
-
-    padding-bottom: 22px;
-
     border-bottom:
         1px solid
-        #20252b;
+        #242424;
+
+    padding-bottom: 20px;
 }
 
 
 .logo-area h1 {
-    font-size: 48px;
 
-    letter-spacing: 9px;
+    font-size: 46px;
 
-    color: var(--green);
+    letter-spacing: 10px;
 
-    text-shadow:
-        0 0 18px
-        rgba(0,255,157,0.25);
+    color: #ffffff;
+
+    font-weight: 700;
 }
 
 
 .logo-area p {
+
     margin-top: 5px;
 
-    font-size: 11px;
+    font-size: 10px;
 
     letter-spacing: 4px;
 
@@ -106,26 +111,15 @@ body {
 
 
 .level-box {
-    min-width: 90px;
 
-    padding:
-        8px
-        20px;
+    min-width: 85px;
 
     text-align: center;
-
-    background:
-        rgba(255,255,255,0.02);
-
-    border:
-        1px solid
-        #272d34;
-
-    border-radius: 10px;
 }
 
 
 .level-box span {
+
     display: block;
 
     font-size: 9px;
@@ -137,36 +131,44 @@ body {
 
 
 .level-box strong {
-    font-size: 32px;
 
-    color: var(--text);
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 32px;
 }
 
 
 .lives {
+
     text-align: right;
 
-    font-size: 25px;
+    font-size: 22px;
+
+    letter-spacing: 3px;
 }
 
 
-/* =====================================
+/* =========================================
    PROGRESS
-===================================== */
+========================================= */
 
 .progress-section {
-    margin-top: 22px;
+
+    margin-top: 20px;
 }
 
 
 .progress-info {
+
     display: flex;
 
     justify-content: space-between;
 
     margin-bottom: 8px;
 
-    font-size: 11px;
+    font-size: 10px;
 
     letter-spacing: 2px;
 
@@ -175,80 +177,91 @@ body {
 
 
 #difficulty {
-    color: var(--yellow);
+
+    color: #ffffff;
 }
 
 
 .progress-bar {
+
     width: 100%;
 
-    height: 6px;
+    height: 4px;
+
+    background: #202020;
 
     overflow: hidden;
 
-    background: #171b20;
-
-    border-radius: 20px;
+    border-radius: 5px;
 }
 
 
 #progressFill {
+
     width: 0%;
 
     height: 100%;
 
-    background: var(--green);
-
-    box-shadow:
-        0 0 12px
-        rgba(0,255,157,0.6);
+    background: #ffffff;
 
     transition:
-        width 0.3s ease;
+        width
+        0.25s
+        ease;
 }
 
 
-/* =====================================
-   INSTRUCTION
-===================================== */
+/* =========================================
+   INSTRUCTIONS
+========================================= */
 
 .instruction {
-    margin-top: 30px;
+
+    margin-top: 28px;
 
     text-align: center;
 }
 
 
 .instruction p:first-child {
-    font-size: 17px;
 
-    font-weight: 600;
+    font-size: 15px;
+
+    font-weight: bold;
 }
 
 
 .small-hint {
-    margin-top: 8px;
 
-    font-size: 12px;
+    margin-top: 7px;
 
     color: var(--muted);
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
 }
 
 
-/* =====================================
-   WORD
-===================================== */
+/* =========================================
+   HIDDEN WORD
+========================================= */
 
 .word-area {
-    margin-top: 20px;
 
-    margin-bottom: 22px;
+    margin:
+        18px
+        0
+        20px;
 
     text-align: center;
 }
 
 
 .word-label {
+
+    display: block;
+
     font-size: 9px;
 
     letter-spacing: 5px;
@@ -258,30 +271,28 @@ body {
 
 
 #hiddenWord {
+
     margin-top: 8px;
 
-    font-size: 34px;
+    font-size: 27px;
 
-    letter-spacing: 13px;
+    letter-spacing: 8px;
 
-    color: var(--green);
-
-    text-shadow:
-        0 0 15px
-        rgba(0,255,157,0.3);
+    color: #ffffff;
 }
 
 
-/* =====================================
-   GAME BOARD
-===================================== */
+/* =========================================
+   BOARD
+========================================= */
 
 .game-board {
+
     position: relative;
 
     width: 100%;
 
-    max-width: 1200px;
+    max-width: 1350px;
 
     height: 650px;
 
@@ -291,19 +302,20 @@ body {
 
     overflow: hidden;
 
-    background-color: #07090b;
+    background-color:
+        var(--board);
 
     background-image:
 
         linear-gradient(
-            rgba(255,255,255,0.035)
+            rgba(255,255,255,0.025)
             1px,
             transparent 1px
         ),
 
         linear-gradient(
             90deg,
-            rgba(255,255,255,0.035)
+            rgba(255,255,255,0.025)
             1px,
             transparent 1px
         );
@@ -314,24 +326,23 @@ body {
 
     border:
         1px solid
-        #2a3037;
+        #292929;
 
-    border-radius: 18px;
+    border-radius:
+        14px;
 
     box-shadow:
-        inset 0 0 50px
-        rgba(0,0,0,0.45),
-
-        0 15px 50px
-        rgba(0,0,0,0.35);
+        inset 0 0 60px
+        rgba(0,0,0,0.65);
 }
 
 
-/* =====================================
+/* =========================================
    SVG
-===================================== */
+========================================= */
 
 #gameBoard svg {
+
     display: block;
 
     width: 100%;
@@ -340,91 +351,129 @@ body {
 }
 
 
-/* =====================================
-   ARROWS
-===================================== */
+/* =========================================
+   HARROW PATH
+========================================= */
 
 .arrow-line {
-    stroke: #00ff9d !important;
 
-    stroke-width: 7 !important;
+    stroke:
+        #ffffff !important;
 
-    fill: none !important;
+    stroke-width:
+        3px !important;
 
-    stroke-linecap: round;
+    fill:
+        none !important;
 
-    stroke-linejoin: round;
+    stroke-linecap:
+        round;
+
+    stroke-linejoin:
+        round;
 
     vector-effect:
         non-scaling-stroke;
 
     filter:
-        drop-shadow(
-            0 0 4px
-            rgba(0,255,157,0.35)
-        );
+        none;
 
     transition:
         stroke-width
-        0.15s ease;
+        0.12s
+        ease,
+
+        opacity
+        0.2s
+        ease;
 }
 
 
+/* =========================================
+   CLICK TARGET
+========================================= */
+
 .arrow-hit {
-    cursor: pointer;
+
+    stroke:
+        transparent;
+
+    cursor:
+        pointer;
 
     vector-effect:
         non-scaling-stroke;
 }
 
 
+/* =========================================
+   HOVER
+========================================= */
+
 .arrow-group:hover
 .arrow-line {
-    stroke-width: 10 !important;
+
+    stroke-width:
+        4px !important;
 
     filter:
         drop-shadow(
-            0 0 10px
-            rgba(0,255,157,0.65)
+            0 0 5px
+            rgba(255,255,255,0.4)
         );
 }
 
 
+/* =========================================
+   REMOVED
+========================================= */
+
 .arrow-group.removed {
+
     opacity: 0;
+
+    transform:
+        scale(0.98);
+
+    transform-origin:
+        center;
 
     transition:
         opacity
-        0.25s ease;
+        0.2s
+        ease;
 }
 
 
-/* =====================================
+/* =========================================
    STATUS
-===================================== */
+========================================= */
 
 .status-message {
-    min-height: 30px;
 
-    margin-top: 18px;
+    min-height: 28px;
+
+    margin-top: 14px;
 
     text-align: center;
 
-    font-size: 13px;
+    font-size: 11px;
 
     font-weight: bold;
 
     letter-spacing: 2px;
 
-    color: var(--green);
+    color:
+        #ffffff;
 }
 
 
-/* =====================================
-   BUTTON
-===================================== */
+/* =========================================
+   NEXT BUTTON
+========================================= */
 
 .next-button {
+
     display: block;
 
     margin:
@@ -432,43 +481,49 @@ body {
         auto;
 
     padding:
-        13px
+        12px
         25px;
 
-    border: none;
+    background:
+        #ffffff;
 
-    border-radius: 8px;
+    color:
+        #000000;
 
-    background: var(--green);
+    border:
+        none;
 
-    color: #000;
+    border-radius:
+        6px;
 
-    font-weight: bold;
+    font-family:
+        inherit;
 
-    cursor: pointer;
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
 }
 
 
-.next-button:hover {
-    transform:
-        translateY(-2px);
-}
-
-
-/* =====================================
+/* =========================================
    HIDDEN
-===================================== */
+========================================= */
 
 .hidden {
-    display: none !important;
+
+    display:
+        none !important;
 }
 
 
-/* =====================================
+/* =========================================
    OVERLAY
-===================================== */
+========================================= */
 
 .overlay {
+
     position: fixed;
 
     inset: 0;
@@ -481,20 +536,21 @@ body {
 
     justify-content: center;
 
-    padding: 20px;
-
     background:
-        rgba(0,0,0,0.85);
+        rgba(0,0,0,0.88);
 
     backdrop-filter:
         blur(8px);
+
+    padding: 20px;
 }
 
 
 .overlay-card {
+
     width: 100%;
 
-    max-width: 450px;
+    max-width: 440px;
 
     padding:
         45px
@@ -502,69 +558,90 @@ body {
 
     text-align: center;
 
-    background: var(--panel);
+    background:
+        #090909;
 
     border:
         1px solid
-        #303740;
+        #303030;
 
-    border-radius: 18px;
+    border-radius:
+        14px;
 }
 
 
 .big-icon {
-    margin-bottom: 15px;
 
-    font-size: 55px;
+    font-size: 50px;
+
+    margin-bottom: 15px;
 }
 
 
 .overlay-card h2 {
-    margin-bottom: 12px;
+
+    font-size: 22px;
 
     letter-spacing: 3px;
+
+    margin-bottom: 12px;
 }
 
 
 .overlay-card p {
-    margin-bottom: 20px;
 
-    color: var(--muted);
+    color:
+        var(--muted);
+
+    margin-bottom: 18px;
 }
 
 
 .overlay-card button {
+
     padding:
-        13px
-        25px;
+        12px
+        24px;
 
-    border: none;
+    border:
+        none;
 
-    border-radius: 8px;
+    border-radius:
+        6px;
 
-    background: var(--green);
+    background:
+        #ffffff;
 
-    color: #000;
+    color:
+        #000000;
 
-    font-weight: bold;
+    font-family:
+        inherit;
 
-    cursor: pointer;
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
 }
 
 
 .mystery-text {
-    color: var(--green) !important;
+
+    color:
+        #ffffff !important;
 }
 
 
-/* =====================================
+/* =========================================
    SHAKE
-===================================== */
+========================================= */
 
 .board-shake {
+
     animation:
         boardShake
-        0.4s
+        0.35s
         ease;
 }
 
@@ -578,17 +655,17 @@ body {
 
     25% {
         transform:
-            translateX(-8px);
+            translateX(-7px);
     }
 
     50% {
         transform:
-            translateX(8px);
+            translateX(7px);
     }
 
     75% {
         transform:
-            translateX(-5px);
+            translateX(-4px);
     }
 
     100% {
@@ -598,52 +675,70 @@ body {
 }
 
 
-/* =====================================
+/* =========================================
    MOBILE
-===================================== */
+========================================= */
 
-@media (max-width: 800px) {
+@media
+(max-width: 800px) {
 
     .game-container {
+
         padding:
-            20px
-            15px
+            18px
+            12px
             30px;
     }
 
 
     .top-bar {
+
         grid-template-columns:
             1fr
             1fr;
+
+        row-gap:
+            15px;
     }
 
 
     .logo-area {
+
         grid-column:
             1 / -1;
     }
 
 
     .logo-area h1 {
-        font-size: 35px;
+
+        font-size:
+            34px;
+
+        letter-spacing:
+            7px;
     }
 
 
     .lives {
-        text-align: right;
+
+        text-align:
+            right;
     }
 
 
     .game-board {
-        height: 500px;
+
+        height:
+            520px;
     }
 
 
     #hiddenWord {
-        font-size: 25px;
 
-        letter-spacing: 8px;
+        font-size:
+            22px;
+
+        letter-spacing:
+            5px;
     }
-
 }
