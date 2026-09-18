@@ -1,93 +1,372 @@
 const levels = [
 
+    /* =====================================
+       LEVEL 1
+       HTML
+    ===================================== */
+
     {
         id: 1,
+
         difficulty: "EASY",
-        type: "MCQ",
 
-        question: "What does HTML stand for?",
+        word: "HTML",
 
-        options: [
-            "Hyper Text Markup Language",
-            "High Text Machine Language",
-            "Hyper Tool Multi Language",
-            "Home Text Markup Language"
-        ],
+        message:
+            "The beginning of the web.",
 
-        answer: 0
+        paths: [
+
+            {
+                id: "p1",
+                x: 100,
+                y: 100,
+                length: 180,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p2",
+                x: 100,
+                y: 100,
+                length: 180,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p3",
+                x: 280,
+                y: 100,
+                length: 180,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p4",
+                x: 100,
+                y: 280,
+                length: 180,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p5",
+                x: 400,
+                y: 100,
+                length: 180,
+                angle: 90,
+                safe: true
+            }
+        ]
     },
 
+
+    /* =====================================
+       LEVEL 2
+       CSS
+    ===================================== */
 
     {
         id: 2,
+
         difficulty: "EASY",
-        type: "OUTPUT",
 
-        question: 'What is the output of: console.log(2 + "2")?',
+        word: "CSS",
 
-        options: [
-            "4",
-            "22",
-            "undefined",
-            "NaN"
-        ],
+        message:
+            "Style is hidden inside the structure.",
 
-        answer: 1
+        paths: [
+
+            {
+                id: "p1",
+                x: 150,
+                y: 120,
+                length: 160,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p2",
+                x: 150,
+                y: 120,
+                length: 160,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p3",
+                x: 310,
+                y: 120,
+                length: 160,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p4",
+                x: 150,
+                y: 280,
+                length: 160,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p5",
+                x: 470,
+                y: 120,
+                length: 130,
+                angle: 90,
+                safe: true
+            }
+        ]
     },
 
+
+    /* =====================================
+       LEVEL 3
+       JAVA
+    ===================================== */
 
     {
         id: 3,
+
         difficulty: "MEDIUM",
-        type: "LOGIC",
 
-        question: "Which value represents true in JavaScript?",
+        word: "JAVA",
 
-        options: [
-            "0",
-            "false",
-            "1",
-            "null"
-        ],
+        message:
+            "Follow the structure. Ignore the obvious.",
 
-        answer: 2
+        paths: [
+
+            {
+                id: "p1",
+                x: 100,
+                y: 120,
+                length: 200,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p2",
+                x: 100,
+                y: 120,
+                length: 200,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p3",
+                x: 300,
+                y: 120,
+                length: 170,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p4",
+                x: 100,
+                y: 290,
+                length: 200,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p5",
+                x: 470,
+                y: 120,
+                length: 150,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p6",
+                x: 620,
+                y: 120,
+                length: 160,
+                angle: 90,
+                safe: true
+            }
+        ]
     },
 
+
+    /* =====================================
+       LEVEL 4
+       PYTHON
+    ===================================== */
 
     {
         id: 4,
+
         difficulty: "HARD",
-        type: "DEBUG",
 
-        question: "Which keyword declares a constant in JavaScript?",
+        word: "PYTHON",
 
-        options: [
-            "var",
-            "let",
-            "const",
-            "constant"
-        ],
+        message:
+            "Now the structure becomes harder to read.",
 
-        answer: 2
+        paths: [
+
+            {
+                id: "p1",
+                x: 80,
+                y: 80,
+                length: 180,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p2",
+                x: 80,
+                y: 80,
+                length: 180,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p3",
+                x: 260,
+                y: 80,
+                length: 180,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p4",
+                x: 80,
+                y: 260,
+                length: 180,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p5",
+                x: 440,
+                y: 80,
+                length: 180,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p6",
+                x: 620,
+                y: 80,
+                length: 180,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p7",
+                x: 440,
+                y: 260,
+                length: 180,
+                angle: 0,
+                safe: true
+            }
+        ]
     },
 
 
+    /* =====================================
+       LEVEL 5
+       REACT
+    ===================================== */
+
     {
         id: 5,
+
         difficulty: "CRITICAL",
 
-        type: "TRICK",
+        word: "REACT",
 
-        question: "Which option is NOT a programming language?",
+        message:
+            "The real challenge begins here.",
 
-        options: [
-            "Python",
-            "Java",
-            "HTML",
-            "C++"
-        ],
+        paths: [
 
-        answer: 2
+            {
+                id: "p1",
+                x: 70,
+                y: 100,
+                length: 200,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p2",
+                x: 70,
+                y: 100,
+                length: 200,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p3",
+                x: 270,
+                y: 100,
+                length: 160,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p4",
+                x: 70,
+                y: 300,
+                length: 200,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p5",
+                x: 430,
+                y: 100,
+                length: 180,
+                angle: 0,
+                safe: true
+            },
+
+            {
+                id: "p6",
+                x: 610,
+                y: 100,
+                length: 180,
+                angle: 90,
+                safe: true
+            },
+
+            {
+                id: "p7",
+                x: 430,
+                y: 280,
+                length: 180,
+                angle: 0,
+                safe: true
+            }
+        ]
     }
 
 ];
