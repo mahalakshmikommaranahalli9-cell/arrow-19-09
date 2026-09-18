@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --black: #080706;
+    --black2: #0e0d0b;
+    --gold: #c9a96e;
+    --gold-light: #e6cf9b;
+    --cream: #f4efe5;
+    --muted: #8e897f;
+    --line: rgba(201, 169, 110, 0.22);
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: Inter, sans-serif;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+
+/* =========================
+   START
+========================= */
+
+#startScreen {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#startScreen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(201, 169, 110, 0.13),
+            transparent 38%
+        );
+
+    pointer-events: none;
+}
+
+.start-content {
+    width: min(520px, 90%);
+    position: relative;
+    z-index: 2;
+}
+
+.small-label {
+    color: var(--gold);
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: clamp(42px, 8vw, 78px);
+    letter-spacing: -4px;
+    font-weight: 700;
+}
+
+h1 span,
+.game-title span {
+    color: var(--gold);
+}
+
+.subtitle {
+    margin-top: 12px;
+    color: var(--muted);
+    letter-spacing: 5px;
+    font-size: 12px;
+}
+
+.mission-box {
+    border: 1px solid var(--line);
+    margin: 45px auto 30px;
+    padding: 25px;
+    max-width: 400px;
+    background: rgba(255,255,255,0.015);
+}
+
+.mission-box div {
+    color: var(--gold);
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+}
+
+.mission-box strong {
+    font-size: 17px;
+}
+
+.mission-box p {
+    margin-top: 10px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+.gold-btn {
+    border: 0;
+    background: var(--gold);
+    color: #111;
+    padding: 16px 30px;
+    min-width: 190px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.gold-btn:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+}
+
+.install-area {
+    margin-top: 15px;
+}
+
+.install-btn {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.install-btn:hover {
+    color: var(--gold);
+}
+
+.version {
+    margin-top: 45px;
+    color: #55514b;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+
+/* =========================
+   GAME
+========================= */
+
+#gameScreen {
+    flex-direction: column;
+}
+
+.game-header {
+    width: min(1000px, 94%);
+    margin: 0 auto;
+    padding: 25px 0;
+    border-bottom: 1px solid var(--line);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-title {
+    font-family: "DM Mono", monospace;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.level-name {
+    margin-top: 6px;
+    color: var(--gold);
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.stats {
+    display: flex;
+    gap: 25px;
+}
+
+.stat {
+    text-align: right;
+}
+
+.stat small {
+    display: block;
+    color: var(--muted);
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+}
+
+.stat strong {
+    display: block;
+    margin-top: 3px;
+    font-family: "DM Mono", monospace;
+    font-size: 14px;
+}
+
+.game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.message {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.board {
+    display: grid;
+    gap: 6px;
+
+    padding: 8px;
+
+    background: #0d0c0a;
+    border: 1px solid var(--line);
+
+    box-shadow:
+        0 20px 80px rgba(0,0,0,0.5);
+}
+
+.cell {
+    width: clamp(52px, 9vw, 82px);
+    height: clamp(52px, 9vw, 82px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #15130f;
+    border: 1px solid rgba(201,169,110,0.08);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        opacity 0.2s ease;
+}
+
+.cell:hover {
+    background: #201c15;
+}
+
+.cell.blocked {
+    cursor: not-allowed;
+}
+
+.arrow {
+    font-size: clamp(24px, 5vw, 42px);
+    color: var(--gold-light);
+
+    transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.cell.escape:hover .arrow {
+    transform: scale(1.12);
+}
+
+.cell.removing {
+    transform: scale(0);
+    opacity: 0;
+}
+
+.controls {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 10px 18px;
+    cursor: pointer;
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.control-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+
+/* =========================
+   COMPLETE
+========================= */
+
+#completeScreen,
+#finalScreen {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.complete-content,
+.final-content {
+    width: min(500px, 90%);
+}
+
+.complete-icon {
+    width: 60px;
+    height: 60px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 30px;
+    font-size: 25px;
+}
+
+h2 {
+    font-size: clamp(45px, 9vw, 75px);
+    line-height: 0.95;
+    letter-spacing: -3px;
+}
+
+.result-box {
+    margin: 35px auto;
+    padding: 20px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+
+    color: var(--muted);
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+.result-box strong {
+    display: block;
+    margin-top: 8px;
+    color: var(--cream);
+    font-size: 16px;
+}
+
+
+/* =========================
+   FINAL
+========================= */
+
+.final-symbol {
+    color: var(--gold);
+    font-size: 35px;
+    margin: 20px 0;
+}
+
+.date-line {
+    margin: 35px 0;
+    font-family: "DM Mono", monospace;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+.date-line span {
+    color: var(--muted);
+    margin: 0 12px;
+}
+
+.final-card {
+    border: 1px solid var(--line);
+    padding: 30px;
+    margin-bottom: 30px;
+    background: rgba(255,255,255,0.015);
+}
+
+.card-label {
+    color: var(--gold);
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+}
+
+.final-card p {
+    color: #b5afa4;
+    line-height: 1.8;
+    margin-top: 18px;
+    font-size: 13px;
+}
+
+.signature {
+    margin-top: 20px;
+    color: var(--cream);
+    font-size: 13px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .screen {
+        min-height: 100dvh;
+        height: 100dvh;
+    }
+
+    h1 {
+        letter-spacing: -2px;
+    }
+
+    .mission-box {
+        margin-top: 30px;
+    }
+
+    .game-header {
+        padding: 18px 0;
+    }
+
+    .game-area {
+        padding-bottom: 20px;
+    }
+
+    .board {
+        gap: 4px;
+        padding: 5px;
+    }
+
+    .cell {
+        width: min(18vw, 62px);
+        height: min(18vw, 62px);
+    }
+
+    .controls {
+        margin-top: 15px;
+    }
+
+    .final-card {
+        padding: 22px;
+    }
+
+    .date-line {
+        font-size: 10px;
+    }
+
+}
