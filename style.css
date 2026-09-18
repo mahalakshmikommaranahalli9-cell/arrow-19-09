@@ -1,6 +1,170 @@
-/* ==========================================
-   HARROW - FINAL ARROW BOARD
-   ========================================== */
+/* =========================================
+   HARROW
+   FINAL GAME STYLE
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: #050505;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+   ========================================= */
+
+.game-container {
+    width: min(1200px, 94%);
+    margin: 0 auto;
+    padding: 25px 0 50px;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.top-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 0 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+
+.logo-area h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 900;
+    letter-spacing: 8px;
+    line-height: 1;
+}
+
+
+.logo-area p {
+    margin-top: 8px;
+    color: #999;
+    font-size: 12px;
+    letter-spacing: 3px;
+}
+
+
+.level-box {
+    text-align: center;
+    min-width: 100px;
+}
+
+
+.level-box span {
+    display: block;
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 3px;
+}
+
+
+.level-box strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 30px;
+    letter-spacing: 3px;
+}
+
+
+.lives {
+    min-width: 130px;
+    text-align: right;
+    font-size: 20px;
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   PROGRESS
+   ========================================= */
+
+.progress-section {
+    width: 100%;
+    margin-top: 22px;
+}
+
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 9px;
+}
+
+
+.progress-info span {
+    color: #aaa;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #1c1c1c;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+#progressFill {
+    width: 0;
+    height: 100%;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+
+/* =========================================
+   INSTRUCTION
+   ========================================= */
+
+.instruction {
+    text-align: center;
+    padding: 22px 10px 10px;
+}
+
+
+#instructionText {
+    color: #eeeeee;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+.small-hint {
+    margin-top: 7px;
+    color: #666;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   GAME BOARD
+   ========================================= */
 
 .game-board {
     width: 100%;
@@ -19,16 +183,14 @@
         ),
         #050505;
 
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.14);
     border-radius: 14px;
 
     box-shadow:
-        0 0 40px rgba(0,0,0,0.8),
-        inset 0 0 40px rgba(255,255,255,0.025);
+        0 0 50px rgba(0,0,0,0.9),
+        inset 0 0 50px rgba(255,255,255,0.025);
 }
 
-
-/* SVG */
 
 #gameBoard svg {
     width: 100%;
@@ -37,21 +199,21 @@
 }
 
 
-/* THIN WHITE HARROWS */
+/* =========================================
+   HARROWS
+   ========================================= */
 
 #gameBoard .harrow-visible {
     stroke: #ffffff;
     stroke-width: 1.8px;
-    opacity: 0.92;
+    opacity: 0.95;
 
     transition:
-        stroke-width 0.15s ease,
-        opacity 0.15s ease,
-        filter 0.15s ease;
+        stroke-width 0.12s ease,
+        opacity 0.12s ease,
+        filter 0.12s ease;
 }
 
-
-/* HOVER */
 
 #gameBoard .harrow-hover {
     stroke-width: 3px;
@@ -60,12 +222,10 @@
     filter:
         drop-shadow(
             0 0 5px
-            rgba(255,255,255,0.7)
+            rgba(255,255,255,0.8)
         );
 }
 
-
-/* WRONG ARROW */
 
 #gameBoard .harrow-wrong {
     stroke: #ff4057 !important;
@@ -77,8 +237,7 @@
             rgba(255,64,87,0.8)
         );
 
-    animation:
-        wrongArrow 0.45s ease;
+    animation: wrongArrow 0.45s ease;
 }
 
 
@@ -89,7 +248,7 @@
     }
 
     25% {
-        opacity: 0.35;
+        opacity: 0.3;
     }
 
     50% {
@@ -97,21 +256,182 @@
     }
 
     75% {
-        opacity: 0.35;
+        opacity: 0.3;
     }
 
     100% {
         opacity: 1;
     }
-
 }
 
 
-/* BOARD SHAKE */
+/* =========================================
+   STATUS
+   ========================================= */
+
+.status-message {
+    min-height: 28px;
+    margin: 10px auto;
+
+    text-align: center;
+
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+
+.status-message.correct {
+    color: #ffffff;
+
+    text-shadow:
+        0 0 10px
+        rgba(255,255,255,0.5);
+}
+
+
+.status-message.wrong {
+    color: #ff4057;
+
+    text-shadow:
+        0 0 10px
+        rgba(255,64,87,0.5);
+}
+
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+.next-button {
+    display: block;
+
+    margin: 12px auto 25px;
+    padding: 13px 28px;
+
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+
+    background: #ffffff;
+    color: #050505;
+
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2px;
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+}
+
+
+.next-button:hover {
+    transform: translateY(-2px);
+    background: #dddddd;
+}
+
+
+/* =========================================
+   OVERLAY
+   ========================================= */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.88);
+
+    backdrop-filter: blur(8px);
+}
+
+
+.overlay.hidden,
+.next-button.hidden {
+    display: none;
+}
+
+
+.overlay-card {
+    width: min(420px, 90vw);
+
+    padding: 45px 30px;
+
+    text-align: center;
+
+    background: #0c0c0c;
+
+    border: 1px solid
+        rgba(255,255,255,0.18);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 0 60px
+        rgba(0,0,0,0.9);
+}
+
+
+.big-icon {
+    font-size: 55px;
+    margin-bottom: 18px;
+}
+
+
+.overlay-card h2 {
+    font-size: 28px;
+    letter-spacing: 4px;
+}
+
+
+.overlay-card p {
+    margin-top: 12px;
+    color: #999;
+    font-size: 14px;
+}
+
+
+.overlay-card button {
+    margin-top: 25px;
+
+    padding: 12px 26px;
+
+    border: 1px solid #fff;
+    border-radius: 5px;
+
+    background: #fff;
+    color: #000;
+
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+
+.mystery-text {
+    color: #555 !important;
+}
+
+
+/* =========================================
+   BOARD SHAKE
+   ========================================= */
 
 .board-shake {
-    animation:
-        boardShake 0.4s ease;
+    animation: boardShake 0.4s ease;
 }
 
 
@@ -140,54 +460,41 @@
     100% {
         transform: translateX(0);
     }
-
 }
 
 
-/* STATUS */
-
-.status-message {
-    min-height: 28px;
-    margin: 12px auto;
-
-    text-align: center;
-
-    font-weight: 700;
-    letter-spacing: 1px;
-
-    transition:
-        opacity 0.2s ease;
-}
-
-
-.status-message.correct {
-    color: #ffffff;
-
-    text-shadow:
-        0 0 8px
-        rgba(255,255,255,0.5);
-}
-
-
-.status-message.wrong {
-    color: #ff4057;
-
-    text-shadow:
-        0 0 8px
-        rgba(255,64,87,0.5);
-}
-
-
-/* NEXT BUTTON */
-
-.next-button {
-    margin: 10px auto 25px;
-}
-
-
-/* MOBILE */
+/* =========================================
+   MOBILE
+   ========================================= */
 
 @media (max-width: 700px) {
+
+    .game-container {
+        width: 96%;
+        padding-top: 15px;
+    }
+
+
+    .top-bar {
+        flex-wrap: wrap;
+    }
+
+
+    .logo-area {
+        width: 100%;
+    }
+
+
+    .level-box {
+        text-align: left;
+    }
+
+
+    .lives {
+        margin-left: auto;
+        text-align: right;
+    }
+
 
     .game-board {
         height: 68vh;
@@ -195,6 +502,7 @@
         margin-top: 15px;
         border-radius: 10px;
     }
+
 
     #gameBoard .harrow-visible {
         stroke-width: 1.6px;
