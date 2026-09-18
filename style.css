@@ -4,39 +4,55 @@
     box-sizing: border-box;
 }
 
+
+:root {
+    --background: #050505;
+    --panel: #101010;
+    --panel-light: #171717;
+    --border: #2a2a2a;
+    --text: #f5f5f5;
+    --muted: #777;
+    --danger: #ff4545;
+    --success: #55e889;
+}
+
+
 body {
     min-height: 100vh;
 
     background:
-        radial-gradient(circle at top, #1a1a1a 0%, #080808 45%, #000000 100%);
+        radial-gradient(
+            circle at top,
+            #171717,
+            #050505 55%,
+            #000
+        );
 
-    color: #ffffff;
+    color: var(--text);
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    overflow-x: hidden;
 }
 
 
-.game {
+.game-container {
     width: 100%;
-    max-width: 1000px;
-    min-height: 100vh;
+    max-width: 1200px;
 
-    padding: 30px;
+    margin: auto;
+
+    padding: 25px;
 }
 
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
-.game-header {
+.top-bar {
+
     display: grid;
 
     grid-template-columns:
@@ -48,311 +64,416 @@ body {
 
     gap: 20px;
 
-    padding-bottom: 25px;
+    padding-bottom: 22px;
 
-    border-bottom: 1px solid #292929;
+    border-bottom: 1px solid var(--border);
 }
 
 
-.brand h1 {
+.logo-area h1 {
+
     font-size: 38px;
 
-    letter-spacing: 8px;
+    letter-spacing: 9px;
 
-    font-weight: 800;
+    font-weight: 900;
 }
 
 
-.brand p {
+.logo-area p {
+
     margin-top: 5px;
 
-    font-size: 11px;
-
-    letter-spacing: 4px;
-
-    color: #888;
-}
-
-
-.level-info {
-    text-align: center;
-}
-
-
-.level-info span {
-    display: block;
+    color: var(--muted);
 
     font-size: 10px;
 
     letter-spacing: 3px;
-
-    color: #777;
 }
 
 
-.level-info strong {
-    font-size: 34px;
+.level-box {
 
-    letter-spacing: 2px;
+    text-align: center;
+}
+
+
+.level-box span {
+
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+}
+
+
+.level-box strong {
+
+    font-size: 32px;
 }
 
 
 .lives {
-    display: flex;
 
-    justify-content: flex-end;
+    text-align: right;
 
-    gap: 6px;
+    font-size: 23px;
 
-    font-size: 24px;
+    letter-spacing: 3px;
 }
 
 
-/* PROGRESS */
+/* =========================
+   PROGRESS
+========================= */
 
-.progress-area {
-    margin-top: 25px;
+.progress-section {
+
+    margin-top: 20px;
 }
 
 
-.progress-text {
+.progress-info {
+
     display: flex;
 
     justify-content: space-between;
 
-    margin-bottom: 10px;
+    color: var(--muted);
 
-    font-size: 12px;
+    font-size: 11px;
 
     letter-spacing: 2px;
 
-    color: #999;
-}
-
-
-#difficulty {
-    color: #fff;
-
-    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 
 .progress-bar {
-    width: 100%;
 
     height: 4px;
 
+    width: 100%;
+
     background: #222;
+
+    border-radius: 10px;
 
     overflow: hidden;
 }
 
 
 #progressFill {
+
     height: 100%;
 
     width: 0%;
 
-    background: #ffffff;
+    background: white;
 
-    transition: width 0.5s ease;
+    transition:
+        width 0.5s ease;
 }
 
 
-/* CHALLENGE */
+/* =========================
+   INSTRUCTION
+========================= */
 
-#gameArea {
-    display: flex;
-
-    justify-content: center;
-
-    padding: 70px 0 30px;
-}
-
-
-.challenge-card {
-    width: 100%;
-
-    max-width: 750px;
+.instruction {
 
     text-align: center;
+
+    margin-top: 30px;
 }
 
 
-.challenge-type {
-    display: inline-block;
+.instruction p {
 
-    padding: 7px 14px;
+    color: #ddd;
 
-    margin-bottom: 25px;
+    font-size: 14px;
 
-    border: 1px solid #444;
+    letter-spacing: 1px;
+}
+
+
+.instruction .small-hint {
+
+    margin-top: 8px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   HIDDEN WORD
+========================= */
+
+.word-area {
+
+    text-align: center;
+
+    margin-top: 25px;
+}
+
+
+.word-label {
+
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+}
+
+
+#hiddenWord {
+
+    margin-top: 6px;
+
+    font-size: 25px;
+
+    letter-spacing: 8px;
+}
+
+
+/* =========================
+   GAME BOARD
+========================= */
+
+.game-board {
+
+    position: relative;
+
+    width: 100%;
+
+    max-width: 850px;
+
+    height: 520px;
+
+    margin: 30px auto;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 25px 25px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+
+/* =========================
+   PATH
+========================= */
+
+.arrow-path {
+
+    position: absolute;
+
+    height: 6px;
+
+    background: #f5f5f5;
 
     border-radius: 20px;
 
-    font-size: 10px;
-
-    letter-spacing: 3px;
-
-    color: #aaa;
-}
-
-
-.challenge-card h2 {
-    font-size: 30px;
-
-    line-height: 1.4;
-
-    font-weight: 500;
-
-    margin-bottom: 40px;
-}
-
-
-/* OPTIONS */
-
-.options {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 15px;
-}
-
-
-.option {
-    padding: 20px;
-
-    background: #111;
-
-    border: 1px solid #292929;
-
-    border-radius: 10px;
-
-    color: #fff;
-
-    font-size: 15px;
+    transform-origin: left center;
 
     cursor: pointer;
 
     transition:
-        transform 0.2s ease,
-        border-color 0.2s ease,
-        background 0.2s ease;
+        opacity 0.25s ease,
+        transform 0.25s ease;
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05);
 }
 
 
-.option:hover {
-    transform: translateY(-3px);
+.arrow-path:hover {
 
-    border-color: #777;
+    background: #ffffff;
 
-    background: #181818;
+    height: 8px;
 }
 
 
-.option:disabled {
-    cursor: not-allowed;
+.arrow-path.removing {
 
-    opacity: 0.6;
+    opacity: 0;
+
+    transform:
+        scaleX(0.2)
+        rotate(var(--angle));
 }
 
 
-/* MESSAGE */
+/* =========================
+   ARROW HEAD
+========================= */
 
-.message {
-    max-width: 600px;
+.arrow-head {
 
-    margin: 20px auto;
+    position: absolute;
 
-    padding: 15px;
+    right: -3px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%)
+        rotate(45deg);
+
+    width: 13px;
+
+    height: 13px;
+
+    border-top: 4px solid white;
+
+    border-right: 4px solid white;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-message {
+
+    min-height: 25px;
 
     text-align: center;
 
-    border: 1px solid #333;
+    font-size: 13px;
 
-    border-radius: 8px;
+    letter-spacing: 1px;
 
-    animation: appear 0.3s ease;
+    margin: 15px auto;
 }
 
 
-.hidden {
-    display: none !important;
+.status-success {
+
+    color: var(--success);
 }
 
 
-@keyframes appear {
+.status-error {
 
-    from {
-        opacity: 0;
+    color: var(--danger);
 
-        transform: translateY(10px);
+    animation: shake 0.3s;
+}
+
+
+@keyframes shake {
+
+    0% {
+        transform: translateX(0);
     }
 
-    to {
-        opacity: 1;
-
-        transform: translateY(0);
+    25% {
+        transform: translateX(-8px);
     }
 
+    50% {
+        transform: translateX(8px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
 
 
-/* NEXT */
+/* =========================
+   BUTTON
+========================= */
 
 .next-button {
+
     display: block;
 
     margin: 20px auto;
 
     padding: 15px 30px;
 
-    background: #fff;
-
-    color: #000;
-
     border: none;
 
     border-radius: 8px;
 
-    font-size: 13px;
+    background: white;
+
+    color: black;
 
     font-weight: bold;
 
     letter-spacing: 2px;
 
     cursor: pointer;
-
-    transition: transform 0.2s ease;
 }
 
 
 .next-button:hover {
-    transform: scale(1.04);
+
+    transform: scale(1.03);
 }
 
 
-/* OVERLAYS */
+.hidden {
+
+    display: none !important;
+}
+
+
+/* =========================
+   OVERLAY
+========================= */
 
 .overlay {
+
     position: fixed;
 
     inset: 0;
 
-    background: rgba(0, 0, 0, 0.94);
+    background:
+        rgba(0,0,0,0.94);
 
     display: flex;
 
-    justify-content: center;
-
     align-items: center;
 
-    z-index: 100;
+    justify-content: center;
+
+    z-index: 1000;
 }
 
 
-.overlay-box {
+.overlay-card {
+
     width: 90%;
 
     max-width: 500px;
@@ -361,7 +482,7 @@ body {
 
     text-align: center;
 
-    background: #0d0d0d;
+    background: #101010;
 
     border: 1px solid #333;
 
@@ -369,15 +490,17 @@ body {
 }
 
 
-.overlay-icon {
+.big-icon {
+
     font-size: 50px;
 
     margin-bottom: 20px;
 }
 
 
-.overlay-box h2 {
-    font-size: 30px;
+.overlay-card h2 {
+
+    font-size: 27px;
 
     letter-spacing: 4px;
 
@@ -385,30 +508,26 @@ body {
 }
 
 
-.overlay-box p {
+.overlay-card p {
+
     color: #aaa;
 
-    margin-bottom: 10px;
+    line-height: 1.6;
 }
 
 
-.overlay-box .small-text {
-    font-size: 13px;
-
-    color: #666;
-}
-
-
-.overlay-box .mystery {
-    color: #fff;
-
-    font-size: 20px;
+.mystery-text {
 
     margin-top: 20px;
+
+    color: white !important;
+
+    font-size: 18px;
 }
 
 
-.overlay-box button {
+.overlay-card button {
+
     margin-top: 25px;
 
     padding: 14px 28px;
@@ -417,9 +536,9 @@ body {
 
     border-radius: 7px;
 
-    background: #fff;
+    background: white;
 
-    color: #000;
+    color: black;
 
     font-weight: bold;
 
@@ -427,32 +546,56 @@ body {
 }
 
 
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 700px) {
 
-    .game {
-        padding: 20px;
+    .game-container {
+        padding: 15px;
     }
 
-    .game-header {
-        grid-template-columns: 1fr 1fr;
+
+    .top-bar {
+
+        grid-template-columns:
+            1fr
+            1fr;
     }
 
-    .brand {
+
+    .logo-area {
+
         grid-column: 1 / -1;
+
+        text-align: center;
     }
+
 
     .lives {
-        justify-content: flex-end;
+
+        text-align: right;
     }
 
-    .options {
-        grid-template-columns: 1fr;
+
+    .game-board {
+
+        height: 400px;
     }
 
-    .challenge-card h2 {
-        font-size: 23px;
+
+    .instruction p {
+
+        font-size: 12px;
+    }
+
+
+    #hiddenWord {
+
+        font-size: 20px;
+
+        letter-spacing: 5px;
     }
 
 }
