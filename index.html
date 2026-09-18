@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -8,25 +10,44 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     >
 
-    <meta name="theme-color" content="#080706">
+    <meta
+        name="theme-color"
+        content="#080706"
+    >
 
     <meta
         name="description"
         content="ARROW//19.09 — A minimalist arrow escape puzzle."
     >
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="manifest"
+        href="manifest.json"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <title>ARROW//19.09</title>
+
 </head>
+
 
 <body>
 
 <div id="app">
 
-    <!-- START SCREEN -->
-    <section id="startScreen" class="screen active">
+
+    <!-- =====================================================
+         START SCREEN
+    ====================================================== -->
+
+    <section
+        id="startScreen"
+        class="screen active"
+    >
 
         <div class="start-content">
 
@@ -34,32 +55,54 @@
                 PUZZLE SYSTEM
             </div>
 
+
             <h1>
                 ARROW<span>//</span>19.09
             </h1>
+
 
             <p class="subtitle">
                 ESCAPE THE GRID
             </p>
 
+
             <div class="mission-box">
-                <div>MISSION</div>
-                <strong>Find the correct path.</strong>
+
+                <div>
+                    MISSION
+                </div>
+
+                <strong>
+                    Find the correct path.
+                </strong>
+
                 <p>
                     Clear every arrow from the board.
                     Think before you move.
                 </p>
+
             </div>
 
-            <button id="startBtn" class="gold-btn">
+
+            <button
+                id="startBtn"
+                class="gold-btn"
+            >
                 START GAME
             </button>
 
+
             <div class="install-area">
-                <button id="installBtn" class="install-btn">
+
+                <button
+                    id="installBtn"
+                    class="install-btn"
+                >
                     📱 INSTALL GAME
                 </button>
+
             </div>
+
 
             <div class="version">
                 SYSTEM v1.0
@@ -70,133 +113,259 @@
     </section>
 
 
-    <!-- GAME SCREEN -->
-    <section id="gameScreen" class="screen">
+
+    <!-- =====================================================
+         GAME SCREEN
+    ====================================================== -->
+
+    <section
+        id="gameScreen"
+        class="screen"
+    >
 
         <header class="game-header">
 
+
             <div>
+
                 <div class="game-title">
                     ARROW<span>//</span>19.09
                 </div>
 
-                <div id="levelName" class="level-name">
+
+                <div
+                    id="levelName"
+                    class="level-name"
+                >
                     LEVEL 01
                 </div>
+
             </div>
+
+
 
             <div class="stats">
 
-                <div class="stat">
-                    <small>MOVES</small>
-                    <strong id="moves">0</strong>
-                </div>
 
                 <div class="stat">
-                    <small>TIME</small>
-                    <strong id="timer">00:00</strong>
+
+                    <small>
+                        MOVES
+                    </small>
+
+                    <strong id="moves">
+                        0
+                    </strong>
+
                 </div>
+
+
+                <div class="stat">
+
+                    <small>
+                        TIME
+                    </small>
+
+                    <strong id="timer">
+                        00:00
+                    </strong>
+
+                </div>
+
 
             </div>
 
         </header>
 
 
+
         <main class="game-area">
 
-            <div id="message" class="message">
+
+            <div
+                id="message"
+                class="message"
+            >
                 Clear the arrows.
             </div>
 
-            <div id="board" class="board"></div>
+
+            <div
+                id="board"
+                class="board"
+            >
+            </div>
+
 
             <div class="controls">
 
-                <button id="restartBtn" class="control-btn">
+
+                <button
+                    id="restartBtn"
+                    class="control-btn"
+                >
                     ↻ RESTART
                 </button>
 
-                <button id="hintBtn" class="control-btn">
+
+                <button
+                    id="hintBtn"
+                    class="control-btn"
+                >
                     ? HINT
                 </button>
 
+
             </div>
+
 
         </main>
 
     </section>
 
 
-    <!-- LEVEL COMPLETE -->
-    <section id="completeScreen" class="screen">
+
+    <!-- =====================================================
+         LEVEL COMPLETE
+    ====================================================== -->
+
+    <section
+        id="completeScreen"
+        class="screen"
+    >
 
         <div class="complete-content">
 
-            <div class="complete-icon">
+
+            <div
+                class="complete-icon"
+            >
                 ✓
             </div>
+
 
             <div class="small-label">
                 SYSTEM MESSAGE
             </div>
+
+
+            <!--
+                game.js will insert the
+                completed letter here.
+            -->
+
+            <div
+                id="completedLetter"
+                class="completed-letter"
+                style="display:none;"
+            >
+            </div>
+
 
             <h2>
                 LEVEL<br>
                 COMPLETE
             </h2>
 
+
             <div class="result-box">
 
-                <div>
-                    MOVES
-                    <strong id="finalMoves">0</strong>
-                </div>
 
                 <div>
-                    TIME
-                    <strong id="finalTime">00:00</strong>
+
+                    MOVES
+
+                    <strong id="finalMoves">
+                        0
+                    </strong>
+
                 </div>
+
+
+                <div>
+
+                    TIME
+
+                    <strong id="finalTime">
+                        00:00
+                    </strong>
+
+                </div>
+
 
             </div>
 
-            <button id="nextBtn" class="gold-btn">
+
+            <button
+                id="nextBtn"
+                class="gold-btn"
+            >
                 NEXT LEVEL →
             </button>
+
 
         </div>
 
     </section>
 
 
-    <!-- FINAL SCREEN -->
-    <section id="finalScreen" class="screen">
+
+    <!-- =====================================================
+         FINAL SCREEN
+    ====================================================== -->
+
+    <section
+        id="finalScreen"
+        class="screen"
+    >
 
         <div class="final-content">
+
 
             <div class="small-label">
                 ALL SYSTEMS CLEAR
             </div>
 
+
             <div class="final-symbol">
                 ✦
             </div>
+
 
             <h2>
                 MISSION<br>
                 COMPLETE
             </h2>
 
+
             <div class="date-line">
+
                 19.09.2025
-                <span>→</span>
+
+                <span>
+                    →
+                </span>
+
                 19.09.2026
+
             </div>
 
+
+            <!--
+                game.js creates the
+                PRUTHVIRAJ / CODE BLASTER
+                reveal here.
+            -->
+
+
+
             <div class="final-card">
+
 
                 <div class="card-label">
                     ONE YEAR COMPLETE
                 </div>
+
 
                 <p>
                     Every path starts with one step.
@@ -204,23 +373,44 @@
                     Every line of code becomes part of the journey.
                 </p>
 
+
                 <div class="signature">
                     — A Student
                 </div>
 
+
             </div>
 
-            <button id="playAgainBtn" class="gold-btn">
+
+            <button
+                id="playAgainBtn"
+                class="gold-btn"
+            >
                 PLAY AGAIN
             </button>
+
 
         </div>
 
     </section>
 
+
 </div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+     
+     IMPORTANT:
+     levels.js MUST load before game.js.
+====================================================== -->
+
+<script src="levels.js"></script>
 
 <script src="game.js"></script>
 
+
 </body>
+
 </html>
