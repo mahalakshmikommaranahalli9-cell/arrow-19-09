@@ -1,335 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     >
 
-    <meta
-        name="theme-color"
-        content="#050505"
-    >
+    <meta name="theme-color" content="#080706">
 
     <meta
         name="description"
-        content="HARROW — A challenging arrow path puzzle game."
+        content="ARROW//19.09 — A minimalist arrow escape puzzle."
     >
 
-    <link
-        rel="manifest"
-        href="manifest.json"
-    >
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
 
-    <link
-        rel="icon"
-        href="icons/icon-192.png"
-    >
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-    <title>HARROW | Arrow Puzzle</title>
-
+    <title>ARROW//19.09</title>
 </head>
-
 
 <body>
 
-    <div class="game-container">
+<div id="app">
 
+    <!-- START SCREEN -->
+    <section id="startScreen" class="screen active">
 
-        <!-- =========================
-             HEADER
-        ========================== -->
+        <div class="start-content">
 
-        <header class="top-bar">
+            <div class="small-label">
+                PUZZLE SYSTEM
+            </div>
 
-            <div class="logo-area">
+            <h1>
+                ARROW<span>//</span>19.09
+            </h1>
 
-                <h1>HARROW</h1>
+            <p class="subtitle">
+                ESCAPE THE GRID
+            </p>
 
+            <div class="mission-box">
+                <div>MISSION</div>
+                <strong>Find the correct path.</strong>
                 <p>
-                    ARROW PATH PUZZLE
+                    Clear every arrow from the board.
+                    Think before you move.
                 </p>
-
             </div>
 
+            <button id="startBtn" class="gold-btn">
+                START GAME
+            </button>
 
-            <div class="level-box">
-
-                <span>
-                    LEVEL
-                </span>
-
-                <strong id="levelNumber">
-                    01
-                </strong>
-
+            <div class="install-area">
+                <button id="installBtn" class="install-btn">
+                    📱 INSTALL GAME
+                </button>
             </div>
 
+            <div class="version">
+                SYSTEM v1.0
+            </div>
 
-            <div
-                class="lives"
-                id="lives"
-            >
-                ❤️ ❤️ ❤️
+        </div>
+
+    </section>
+
+
+    <!-- GAME SCREEN -->
+    <section id="gameScreen" class="screen">
+
+        <header class="game-header">
+
+            <div>
+                <div class="game-title">
+                    ARROW<span>//</span>19.09
+                </div>
+
+                <div id="levelName" class="level-name">
+                    LEVEL 01
+                </div>
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <small>MOVES</small>
+                    <strong id="moves">0</strong>
+                </div>
+
+                <div class="stat">
+                    <small>TIME</small>
+                    <strong id="timer">00:00</strong>
+                </div>
+
             </div>
 
         </header>
 
 
+        <main class="game-area">
 
-        <!-- =========================
-             PROGRESS
-        ========================== -->
-
-        <section class="progress-section">
-
-            <div class="progress-info">
-
-                <span id="progressText">
-                    LEVEL 1 / 50
-                </span>
-
-                <span id="difficulty">
-                    EASY
-                </span>
-
+            <div id="message" class="message">
+                Clear the arrows.
             </div>
 
+            <div id="board" class="board"></div>
 
-            <div class="progress-bar">
+            <div class="controls">
 
-                <div
-                    id="progressFill"
-                ></div>
+                <button id="restartBtn" class="control-btn">
+                    ↻ RESTART
+                </button>
+
+                <button id="hintBtn" class="control-btn">
+                    ? HINT
+                </button>
 
             </div>
-
-        </section>
-
-
-
-        <!-- =========================
-             INSTRUCTION
-        ========================== -->
-
-        <section class="instruction">
-
-            <p id="instructionText">
-
-                Remove the arrows one by one.
-
-            </p>
-
-
-            <p class="small-hint">
-
-                Do not remove an arrow that crosses another arrow.
-
-            </p>
-
-        </section>
-
-
-
-        <!-- =========================
-             GAME BOARD
-        ========================== -->
-
-        <main>
-
-            <div
-                id="gameBoard"
-                class="game-board"
-            ></div>
 
         </main>
 
+    </section>
 
 
-        <!-- =========================
-             STATUS
-        ========================== -->
+    <!-- LEVEL COMPLETE -->
+    <section id="completeScreen" class="screen">
 
-        <div
-            id="statusMessage"
-            class="status-message"
-            aria-live="polite"
-        ></div>
+        <div class="complete-content">
 
+            <div class="complete-icon">
+                ✓
+            </div>
 
+            <div class="small-label">
+                SYSTEM MESSAGE
+            </div>
 
-        <!-- =========================
-             NEXT LEVEL BUTTON
-        ========================== -->
+            <h2>
+                LEVEL<br>
+                COMPLETE
+            </h2>
 
-        <button
-            id="nextButton"
-            class="next-button hidden"
-        >
-            NEXT LEVEL →
-        </button>
+            <div class="result-box">
 
-
-
-        <!-- =========================
-             GAME OVER
-        ========================== -->
-
-        <div
-            id="gameOver"
-            class="overlay hidden"
-        >
-
-            <div class="overlay-card">
-
-                <div class="big-icon">
-                    💀
+                <div>
+                    MOVES
+                    <strong id="finalMoves">0</strong>
                 </div>
 
+                <div>
+                    TIME
+                    <strong id="finalTime">00:00</strong>
+                </div>
 
-                <h2>
-                    GAME OVER
-                </h2>
+            </div>
 
+            <button id="nextBtn" class="gold-btn">
+                NEXT LEVEL →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- FINAL SCREEN -->
+    <section id="finalScreen" class="screen">
+
+        <div class="final-content">
+
+            <div class="small-label">
+                ALL SYSTEMS CLEAR
+            </div>
+
+            <div class="final-symbol">
+                ✦
+            </div>
+
+            <h2>
+                MISSION<br>
+                COMPLETE
+            </h2>
+
+            <div class="date-line">
+                19.09.2025
+                <span>→</span>
+                19.09.2026
+            </div>
+
+            <div class="final-card">
+
+                <div class="card-label">
+                    ONE YEAR COMPLETE
+                </div>
 
                 <p>
-                    All three lives are gone.
+                    Every path starts with one step.
+                    Every challenge teaches something.
+                    Every line of code becomes part of the journey.
                 </p>
 
-
-                <button id="retryButton">
-                    TRY AGAIN
-                </button>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =========================
-             LEVEL COMPLETE
-        ========================== -->
-
-        <div
-            id="levelComplete"
-            class="overlay hidden"
-        >
-
-            <div class="overlay-card">
-
-                <div class="big-icon">
-                    ✓
+                <div class="signature">
+                    — A Student
                 </div>
 
-
-                <h2>
-                    HARROW CLEARED
-                </h2>
-
-
-                <p id="completedWord">
-                    LEVEL COMPLETE
-                </p>
-
-
-                <button id="completeNextButton">
-                    NEXT LEVEL →
-                </button>
-
             </div>
+
+            <button id="playAgainBtn" class="gold-btn">
+                PLAY AGAIN
+            </button>
 
         </div>
 
+    </section>
 
+</div>
 
-        <!-- =========================
-             FINAL SCREEN
-        ========================== -->
-
-        <div
-            id="finalScreen"
-            class="overlay hidden"
-        >
-
-            <div class="overlay-card">
-
-                <div class="big-icon">
-                    👑
-                </div>
-
-
-                <h2>
-                    HARROW MASTER
-                </h2>
-
-
-                <p>
-                    All levels have been cleared.
-                </p>
-
-
-                <p class="mystery-text">
-                    You mastered every arrow path.
-                </p>
-
-
-                <button id="secretButton">
-                    PLAY AGAIN
-                </button>
-
-            </div>
-
-        </div>
-
-
-    </div>
-
-
-
-    <!-- =========================
-         GAME JAVASCRIPT
-    ========================== -->
-
-    <script src="levels.js"></script>
-
-    <script src="script.js"></script>
-
-
-
-    <!-- =========================
-         SERVICE WORKER
-    ========================== -->
-
-    <script>
-
-        if ("serviceWorker" in navigator) {
-
-            window.addEventListener(
-                "load",
-                function () {
-
-                    navigator.serviceWorker.register(
-                        "sw.js"
-                    );
-
-                }
-            );
-
-        }
-
-    </script>
-
+<script src="game.js"></script>
 
 </body>
-
 </html>
