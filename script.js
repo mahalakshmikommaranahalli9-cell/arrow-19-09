@@ -1,7 +1,5 @@
 let currentLevel = 0;
-
 let lives = 3;
-
 let remainingPaths = [];
 
 
@@ -9,72 +7,39 @@ let remainingPaths = [];
    ELEMENTS
 ========================= */
 
-const levelNumber =
-    document.getElementById("levelNumber");
+const levelNumber = document.getElementById("levelNumber");
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
+const difficulty = document.getElementById("difficulty");
+const livesElement = document.getElementById("lives");
+const hiddenWord = document.getElementById("hiddenWord");
+const instructionText = document.getElementById("instructionText");
+const gameBoard = document.getElementById("gameBoard");
+const statusMessage = document.getElementById("statusMessage");
 
-const progressText =
-    document.getElementById("progressText");
+const nextButton = document.getElementById("nextButton");
+const gameOver = document.getElementById("gameOver");
+const retryButton = document.getElementById("retryButton");
 
-const progressFill =
-    document.getElementById("progressFill");
+const levelComplete = document.getElementById("levelComplete");
+const completedWord = document.getElementById("completedWord");
+const completeNextButton = document.getElementById("completeNextButton");
 
-const difficulty =
-    document.getElementById("difficulty");
-
-const livesElement =
-    document.getElementById("lives");
-
-const hiddenWord =
-    document.getElementById("hiddenWord");
-
-const instructionText =
-    document.getElementById("instructionText");
-
-const gameBoard =
-    document.getElementById("gameBoard");
-
-const statusMessage =
-    document.getElementById("statusMessage");
-
-const nextButton =
-    document.getElementById("nextButton");
-
-const gameOver =
-    document.getElementById("gameOver");
-
-const retryButton =
-    document.getElementById("retryButton");
-
-const levelComplete =
-    document.getElementById("levelComplete");
-
-const completedWord =
-    document.getElementById("completedWord");
-
-const completeNextButton =
-    document.getElementById("completeNextButton");
-
-const finalScreen =
-    document.getElementById("finalScreen");
-
-const secretButton =
-    document.getElementById("secretButton");
+const finalScreen = document.getElementById("finalScreen");
+const secretButton = document.getElementById("secretButton");
 
 
 /* =========================
-   START
+   START GAME
 ========================= */
 
 function startGame() {
 
     currentLevel = 0;
-
     lives = 3;
 
     gameOver.classList.add("hidden");
-
     levelComplete.classList.add("hidden");
-
     finalScreen.classList.add("hidden");
 
     loadLevel();
@@ -87,61 +52,42 @@ function startGame() {
 
 function loadLevel() {
 
-    const level =
-        levels[currentLevel];
+    const level = levels[currentLevel];
 
     if (!level) {
-
         showFinalScreen();
-
         return;
     }
 
-
     lives = 3;
 
-    remainingPaths =
-        JSON.parse(
-            JSON.stringify(level.paths)
-        );
-
+    remainingPaths = level.paths.map(path => ({
+        ...path
+    }));
 
     levelNumber.textContent =
         String(level.id).padStart(2, "0");
 
-
     progressText.textContent =
         `LEVEL ${level.id} / 50`;
-
 
     progressFill.style.width =
         `${Math.min((level.id / 50) * 100, 100)}%`;
 
-
     difficulty.textContent =
         level.difficulty;
 
-
-    hiddenWord.textContent =
-        "????";
-
+    hiddenWord.textContent = "????";
 
     instructionText.textContent =
         level.message;
 
-
     statusMessage.textContent = "";
-
-    statusMessage.className =
-        "status-message";
-
+    statusMessage.className = "status-message";
 
     nextButton.classList.add("hidden");
-
     levelComplete.classList.add("hidden");
-
     gameOver.classList.add("hidden");
-
 
     updateLives();
 
@@ -150,80 +96,234 @@ function loadLevel() {
 
 
 /* =========================
-   DRAW BOARD
+   DRAW SVG BOARD
 ========================= */
 
 function drawBoard() {
 
     gameBoard.innerHTML = "";
 
+    /*
+       SVG makes the arrows visible
+       and clickable on every browser.
+    */
+
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    const svg = document.createElementNS(
+        svgNS,
+        "svg"
+    );
+
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "100%");
+    svg.setAttribute("viewBox", "0 0 850 520");
+
+    svg.style.display = "block";
+    svg.style.overflow = "visible";
+
+    /* =========================
+       ARROW MARKER
+    ========================= */
+
+    const defs = document.createElementNS(
+        svgNS,
+        "defs"
+    );
+
+    const marker = document.createElementNS(
+        svgNS,
+        "marker"
+    );
+
+    marker.setAttribute("id", "arrowHead");
+    marker.setAttribute("markerWidth", "12");
+    marker.setAttribute("markerHeight", "12");
+    marker.setAttribute("refX", "9");
+    marker.setAttribute("refY", "4");
+    marker.setAttribute("orient", "auto");
+    marker.setAttribute("markerUnits", "strokeWidth");
+
+    const arrowPolygon =
+        document.createElementNS(
+            svgNS,
+            "polygon"
+        );
+
+    arrowPolygon.setAttribute(
+        "points",
+        "0,0 10,4 0,8"
+    );
+
+    arrowPolygon.setAttribute(
+        "fill",
+        "currentColor"
+    );
+
+    marker.appendChild(arrowPolygon);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+
+    /* =========================
+       DRAW EVERY PATH
+    ========================= */
 
     remainingPaths.forEach(path => {
 
-        const element =
-            document.createElement("div");
+        const group =
+            document.createElementNS(
+                svgNS,
+                "g"
+            );
+
+        group.dataset.id = path.id;
+
+        group.style.cursor = "pointer";
 
 
-        element.className =
-            "arrow-path";
+        /*
+           Convert angle into radians.
+        */
+
+        const radians =
+            path.angle * Math.PI / 180;
 
 
-        element.dataset.id =
-            path.id;
+        const startX = path.x;
+        const startY = path.y;
 
 
-        element.style.left =
-            `${path.x}px`;
+        const endX =
+            startX +
+            Math.cos(radians) * path.length;
+
+        const endY =
+            startY +
+            Math.sin(radians) * path.length;
 
 
-        element.style.top =
-            `${path.y}px`;
+        /* =========================
+           VISIBLE LINE
+        ========================= */
 
+        const line =
+            document.createElementNS(
+                svgNS,
+                "line"
+            );
 
-        element.style.width =
-            `${path.length}px`;
+        line.setAttribute(
+            "x1",
+            startX
+        );
 
+        line.setAttribute(
+            "y1",
+            startY
+        );
 
-        element.style.transform =
-            `rotate(${path.angle}deg)`;
+        line.setAttribute(
+            "x2",
+            endX
+        );
 
+        line.setAttribute(
+            "y2",
+            endY
+        );
 
-        element.style.setProperty(
-            "--angle",
-            `${path.angle}deg`
+        line.setAttribute(
+            "stroke",
+            "#00ff9d"
+        );
+
+        line.setAttribute(
+            "stroke-width",
+            "6"
+        );
+
+        line.setAttribute(
+            "stroke-linecap",
+            "round"
+        );
+
+        line.setAttribute(
+            "marker-end",
+            "url(#arrowHead)"
         );
 
 
-        const arrowHead =
-            document.createElement("span");
+        /* =========================
+           INVISIBLE BIG CLICK AREA
+        ========================= */
 
+        const hitArea =
+            document.createElementNS(
+                svgNS,
+                "line"
+            );
 
-        arrowHead.className =
-            "arrow-head";
-
-
-        element.appendChild(
-            arrowHead
+        hitArea.setAttribute(
+            "x1",
+            startX
         );
 
+        hitArea.setAttribute(
+            "y1",
+            startY
+        );
 
-        element.addEventListener(
+        hitArea.setAttribute(
+            "x2",
+            endX
+        );
+
+        hitArea.setAttribute(
+            "y2",
+            endY
+        );
+
+        hitArea.setAttribute(
+            "stroke",
+            "transparent"
+        );
+
+        hitArea.setAttribute(
+            "stroke-width",
+            "25"
+        );
+
+        hitArea.style.cursor =
+            "pointer";
+
+
+        /* =========================
+           CLICK
+        ========================= */
+
+        hitArea.addEventListener(
             "click",
-            () => attemptRemove(path.id)
+            function () {
+                attemptRemove(path.id);
+            }
         );
 
 
-        gameBoard.appendChild(
-            element
-        );
+        group.appendChild(line);
+        group.appendChild(hitArea);
+
+        svg.appendChild(group);
 
     });
 
+
+    gameBoard.appendChild(svg);
 }
 
 
 /* =========================
-   REMOVE PATH
+   ATTEMPT REMOVE
 ========================= */
 
 function attemptRemove(pathId) {
@@ -233,20 +333,16 @@ function attemptRemove(pathId) {
             p => p.id === pathId
         );
 
-
     if (!path) {
         return;
     }
 
 
     /*
-     * For now, the level data tells
-     * the engine which paths are safe.
-     *
-     * Later we will replace this with
-     * automatic geometric intersection
-     * detection.
-     */
+       For the current prototype,
+       safe:true means the path can
+       be removed.
+    */
 
     if (path.safe === true) {
 
@@ -257,27 +353,29 @@ function attemptRemove(pathId) {
         wrongMove();
 
     }
-
 }
 
 
 /* =========================
-   CORRECT MOVE
+   REMOVE PATH
 ========================= */
 
 function removePath(pathId) {
 
-    const element =
-        document.querySelector(
+    const group =
+        gameBoard.querySelector(
             `[data-id="${pathId}"]`
         );
 
 
-    if (element) {
+    if (group) {
 
-        element.classList.add(
-            "removing"
-        );
+        group.style.transition =
+            "opacity 0.25s ease, transform 0.25s ease";
+
+        group.style.opacity = "0";
+        group.style.transform =
+            "scale(0.7)";
 
     }
 
@@ -293,7 +391,6 @@ function removePath(pathId) {
         statusMessage.textContent =
             "✓ PATH CLEARED";
 
-
         statusMessage.className =
             "status-message status-success";
 
@@ -308,7 +405,6 @@ function removePath(pathId) {
         }
 
     }, 250);
-
 }
 
 
@@ -326,9 +422,22 @@ function wrongMove() {
     statusMessage.textContent =
         "✕ WRONG PATH — LIFE LOST";
 
-
     statusMessage.className =
         "status-message status-error";
+
+
+    gameBoard.classList.add(
+        "board-shake"
+    );
+
+
+    setTimeout(() => {
+
+        gameBoard.classList.remove(
+            "board-shake"
+        );
+
+    }, 400);
 
 
     if (lives <= 0) {
@@ -342,12 +451,11 @@ function wrongMove() {
         }, 400);
 
     }
-
 }
 
 
 /* =========================
-   LIVES
+   UPDATE LIVES
 ========================= */
 
 function updateLives() {
@@ -394,7 +502,6 @@ function completeLevel() {
     levelComplete.classList.remove(
         "hidden"
     );
-
 }
 
 
@@ -404,9 +511,10 @@ function completeLevel() {
 
 completeNextButton.addEventListener(
     "click",
-    () => {
+    function () {
 
         currentLevel++;
+
 
         if (
             currentLevel >= levels.length
@@ -430,7 +538,7 @@ completeNextButton.addEventListener(
 
 retryButton.addEventListener(
     "click",
-    () => {
+    function () {
 
         lives = 3;
 
@@ -453,7 +561,6 @@ function showFinalScreen() {
     finalScreen.classList.remove(
         "hidden"
     );
-
 }
 
 
@@ -463,7 +570,7 @@ function showFinalScreen() {
 
 secretButton.addEventListener(
     "click",
-    () => {
+    function () {
 
         finalScreen.classList.add(
             "hidden"
@@ -477,7 +584,7 @@ secretButton.addEventListener(
 
 
 /* =========================
-   START GAME
+   START
 ========================= */
 
 startGame();
