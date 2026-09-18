@@ -588,3 +588,4 @@ secretButton.addEventListener(
 ========================= */
 
 startGame();
+alert("NEW HARROW JAVASCRIPT IS LOADED");
