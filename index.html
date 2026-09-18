@@ -1,42 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>HARROW | Technical Arrow Challenge</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="theme-color"
+        content="#050505"
+    >
+
+    <meta
+        name="description"
+        content="HARROW — A challenging arrow path puzzle game."
+    >
+
+    <link
+        rel="manifest"
+        href="manifest.json"
+    >
+
+    <link
+        rel="icon"
+        href="icons/icon-192.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <title>HARROW | Arrow Puzzle</title>
+
 </head>
+
 
 <body>
 
     <div class="game-container">
 
-        <!-- HEADER -->
+
+        <!-- =========================
+             HEADER
+        ========================== -->
+
         <header class="top-bar">
 
             <div class="logo-area">
+
                 <h1>HARROW</h1>
-                <p>TECHNICAL ARROW CHALLENGE</p>
+
+                <p>
+                    ARROW PATH PUZZLE
+                </p>
+
             </div>
+
 
             <div class="level-box">
-                <span>LEVEL</span>
-                <strong id="levelNumber">01</strong>
+
+                <span>
+                    LEVEL
+                </span>
+
+                <strong id="levelNumber">
+                    01
+                </strong>
+
             </div>
 
-            <div class="lives" id="lives">
+
+            <div
+                class="lives"
+                id="lives"
+            >
                 ❤️ ❤️ ❤️
             </div>
 
         </header>
 
 
-        <!-- PROGRESS -->
+
+        <!-- =========================
+             PROGRESS
+        ========================== -->
+
         <section class="progress-section">
 
             <div class="progress-info">
+
                 <span id="progressText">
                     LEVEL 1 / 50
                 </span>
@@ -44,71 +101,93 @@
                 <span id="difficulty">
                     EASY
                 </span>
+
             </div>
 
+
             <div class="progress-bar">
-                <div id="progressFill"></div>
+
+                <div
+                    id="progressFill"
+                ></div>
+
             </div>
 
         </section>
 
 
-        <!-- INSTRUCTION -->
+
+        <!-- =========================
+             INSTRUCTION
+        ========================== -->
+
         <section class="instruction">
 
             <p id="instructionText">
-                Remove the arrows one by one without crossing another path.
+
+                Remove the arrows one by one.
+
             </p>
+
 
             <p class="small-hint">
-                Study the design carefully before making a move.
+
+                Do not remove an arrow that crosses another arrow.
+
             </p>
 
         </section>
 
 
-        <!-- TECHNICAL WORD -->
-        <section class="word-area">
 
-            <span class="word-label">
-                HIDDEN TECH
-            </span>
+        <!-- =========================
+             GAME BOARD
+        ========================== -->
 
-            <h2 id="hiddenWord">
-                ????
-            </h2>
-
-        </section>
-
-
-        <!-- GAME BOARD -->
         <main>
 
-            <div id="gameBoard" class="game-board"></div>
+            <div
+                id="gameBoard"
+                class="game-board"
+            ></div>
 
         </main>
 
 
-        <!-- STATUS -->
+
+        <!-- =========================
+             STATUS
+        ========================== -->
+
         <div
             id="statusMessage"
             class="status-message"
-            aria-live="polite">
-        </div>
+            aria-live="polite"
+        ></div>
 
 
-        <!-- NEXT LEVEL -->
+
+        <!-- =========================
+             NEXT LEVEL BUTTON
+        ========================== -->
+
         <button
             id="nextButton"
-            class="next-button hidden">
+            class="next-button hidden"
+        >
             NEXT LEVEL →
         </button>
 
 
-        <!-- GAME OVER -->
+
+        <!-- =========================
+             GAME OVER
+        ========================== -->
+
         <div
             id="gameOver"
-            class="overlay hidden">
+            class="overlay hidden"
+        >
 
             <div class="overlay-card">
 
@@ -116,13 +195,16 @@
                     💀
                 </div>
 
+
                 <h2>
                     GAME OVER
                 </h2>
 
+
                 <p>
                     All three lives are gone.
                 </p>
+
 
                 <button id="retryButton">
                     TRY AGAIN
@@ -133,10 +215,15 @@
         </div>
 
 
-        <!-- LEVEL COMPLETE -->
+
+        <!-- =========================
+             LEVEL COMPLETE
+        ========================== -->
+
         <div
             id="levelComplete"
-            class="overlay hidden">
+            class="overlay hidden"
+        >
 
             <div class="overlay-card">
 
@@ -144,16 +231,19 @@
                     ✓
                 </div>
 
+
                 <h2>
-                    DESIGN CLEARED
+                    HARROW CLEARED
                 </h2>
 
+
                 <p id="completedWord">
-                    TECHNICAL WORD
+                    LEVEL COMPLETE
                 </p>
 
+
                 <button id="completeNextButton">
-                    CONTINUE →
+                    NEXT LEVEL →
                 </button>
 
             </div>
@@ -161,10 +251,15 @@
         </div>
 
 
-        <!-- FINAL -->
+
+        <!-- =========================
+             FINAL SCREEN
+        ========================== -->
+
         <div
             id="finalScreen"
-            class="overlay hidden">
+            class="overlay hidden"
+        >
 
             <div class="overlay-card">
 
@@ -172,17 +267,21 @@
                     👑
                 </div>
 
+
                 <h2>
-                    ALL LEVELS COMPLETE
+                    HARROW MASTER
                 </h2>
 
+
                 <p>
-                    The critical sequence has been cleared.
+                    All levels have been cleared.
                 </p>
 
+
                 <p class="mystery-text">
-                    But HARROW may not be finished...
+                    You mastered every arrow path.
                 </p>
+
 
                 <button id="secretButton">
                     PLAY AGAIN
@@ -192,17 +291,45 @@
 
         </div>
 
+
     </div>
 
 
-    <!-- ==============================
-         GAME FILES
-         IMPORTANT: THESE ARE THE
-         ACTUAL FILE NAMES IN YOUR REPO
-    =============================== -->
+
+    <!-- =========================
+         GAME JAVASCRIPT
+    ========================== -->
 
     <script src="levels.js"></script>
+
     <script src="script.js"></script>
 
+
+
+    <!-- =========================
+         SERVICE WORKER
+    ========================== -->
+
+    <script>
+
+        if ("serviceWorker" in navigator) {
+
+            window.addEventListener(
+                "load",
+                function () {
+
+                    navigator.serviceWorker.register(
+                        "sw.js"
+                    );
+
+                }
+            );
+
+        }
+
+    </script>
+
+
 </body>
+
 </html>
