@@ -2,10 +2,12 @@ let currentLevel = 0;
 
 let lives = 3;
 
-let answered = false;
+let remainingPaths = [];
 
 
-/* ELEMENTS */
+/* =========================
+   ELEMENTS
+========================= */
 
 const levelNumber =
     document.getElementById("levelNumber");
@@ -19,20 +21,20 @@ const progressFill =
 const difficulty =
     document.getElementById("difficulty");
 
-const challengeType =
-    document.getElementById("challengeType");
+const livesElement =
+    document.getElementById("lives");
 
-const question =
-    document.getElementById("question");
+const hiddenWord =
+    document.getElementById("hiddenWord");
 
-const optionsContainer =
-    document.getElementById("options");
+const instructionText =
+    document.getElementById("instructionText");
 
-const message =
-    document.getElementById("message");
+const gameBoard =
+    document.getElementById("gameBoard");
 
-const messageText =
-    document.getElementById("messageText");
+const statusMessage =
+    document.getElementById("statusMessage");
 
 const nextButton =
     document.getElementById("nextButton");
@@ -43,14 +45,25 @@ const gameOver =
 const retryButton =
     document.getElementById("retryButton");
 
-const victory =
-    document.getElementById("victory");
+const levelComplete =
+    document.getElementById("levelComplete");
+
+const completedWord =
+    document.getElementById("completedWord");
+
+const completeNextButton =
+    document.getElementById("completeNextButton");
+
+const finalScreen =
+    document.getElementById("finalScreen");
 
 const secretButton =
     document.getElementById("secretButton");
 
 
-/* START GAME */
+/* =========================
+   START
+========================= */
 
 function startGame() {
 
@@ -60,229 +73,360 @@ function startGame() {
 
     gameOver.classList.add("hidden");
 
-    victory.classList.add("hidden");
+    levelComplete.classList.add("hidden");
+
+    finalScreen.classList.add("hidden");
 
     loadLevel();
-
 }
 
 
-/* LOAD LEVEL */
+/* =========================
+   LOAD LEVEL
+========================= */
 
 function loadLevel() {
 
-    answered = false;
+    const level =
+        levels[currentLevel];
 
-    message.classList.add("hidden");
+    if (!level) {
 
-    nextButton.classList.add("hidden");
+        showFinalScreen();
 
-    const level = levels[currentLevel];
+        return;
+    }
 
 
-    /* LEVEL NUMBER */
+    lives = 3;
+
+    remainingPaths =
+        JSON.parse(
+            JSON.stringify(level.paths)
+        );
+
 
     levelNumber.textContent =
         String(level.id).padStart(2, "0");
 
 
-    /* PROGRESS */
-
     progressText.textContent =
-        `LEVEL ${level.id} / ${levels.length}`;
+        `LEVEL ${level.id} / 50`;
 
 
     progressFill.style.width =
-        `${((currentLevel + 1) / levels.length) * 100}%`;
+        `${Math.min((level.id / 50) * 100, 100)}%`;
 
-
-    /* DIFFICULTY */
 
     difficulty.textContent =
         level.difficulty;
 
 
-    /* TYPE */
-
-    challengeType.textContent =
-        level.type || "CHALLENGE";
+    hiddenWord.textContent =
+        "????";
 
 
-    /* QUESTION */
-
-    question.textContent =
-        level.question;
+    instructionText.textContent =
+        level.message;
 
 
-    /* OPTIONS */
+    statusMessage.textContent = "";
 
-    optionsContainer.innerHTML = "";
+    statusMessage.className =
+        "status-message";
 
 
-    level.options.forEach((option, index) => {
+    nextButton.classList.add("hidden");
 
-        const button =
-            document.createElement("button");
+    levelComplete.classList.add("hidden");
 
-        button.className = "option";
-
-        button.textContent = option;
-
-        button.addEventListener(
-            "click",
-            () => checkAnswer(index)
-        );
-
-        optionsContainer.appendChild(button);
-
-    });
+    gameOver.classList.add("hidden");
 
 
     updateLives();
 
+    drawBoard();
 }
 
 
-/* CHECK ANSWER */
+/* =========================
+   DRAW BOARD
+========================= */
 
-function checkAnswer(selectedAnswer) {
+function drawBoard() {
 
-    if (answered) {
+    gameBoard.innerHTML = "";
+
+
+    remainingPaths.forEach(path => {
+
+        const element =
+            document.createElement("div");
+
+
+        element.className =
+            "arrow-path";
+
+
+        element.dataset.id =
+            path.id;
+
+
+        element.style.left =
+            `${path.x}px`;
+
+
+        element.style.top =
+            `${path.y}px`;
+
+
+        element.style.width =
+            `${path.length}px`;
+
+
+        element.style.transform =
+            `rotate(${path.angle}deg)`;
+
+
+        element.style.setProperty(
+            "--angle",
+            `${path.angle}deg`
+        );
+
+
+        const arrowHead =
+            document.createElement("span");
+
+
+        arrowHead.className =
+            "arrow-head";
+
+
+        element.appendChild(
+            arrowHead
+        );
+
+
+        element.addEventListener(
+            "click",
+            () => attemptRemove(path.id)
+        );
+
+
+        gameBoard.appendChild(
+            element
+        );
+
+    });
+
+}
+
+
+/* =========================
+   REMOVE PATH
+========================= */
+
+function attemptRemove(pathId) {
+
+    const path =
+        remainingPaths.find(
+            p => p.id === pathId
+        );
+
+
+    if (!path) {
         return;
     }
 
 
-    const level =
-        levels[currentLevel];
+    /*
+     * For now, the level data tells
+     * the engine which paths are safe.
+     *
+     * Later we will replace this with
+     * automatic geometric intersection
+     * detection.
+     */
 
+    if (path.safe === true) {
 
-    if (selectedAnswer === level.answer) {
-
-        answered = true;
-
-        showCorrect();
+        removePath(pathId);
 
     } else {
 
-        loseLife();
+        wrongMove();
 
     }
 
 }
 
 
-/* CORRECT */
+/* =========================
+   CORRECT MOVE
+========================= */
 
-function showCorrect() {
+function removePath(pathId) {
 
-    messageText.textContent =
-        "✓ CORRECT — Challenge cleared.";
-
-    message.classList.remove("hidden");
-
-
-    document
-        .querySelectorAll(".option")
-        .forEach(button => {
-
-            button.disabled = true;
-
-        });
+    const element =
+        document.querySelector(
+            `[data-id="${pathId}"]`
+        );
 
 
-    if (currentLevel === levels.length - 1) {
+    if (element) {
 
-        setTimeout(() => {
-
-            victory.classList.remove("hidden");
-
-        }, 700);
-
-    } else {
-
-        nextButton.classList.remove("hidden");
+        element.classList.add(
+            "removing"
+        );
 
     }
+
+
+    setTimeout(() => {
+
+        remainingPaths =
+            remainingPaths.filter(
+                path => path.id !== pathId
+            );
+
+
+        statusMessage.textContent =
+            "✓ PATH CLEARED";
+
+
+        statusMessage.className =
+            "status-message status-success";
+
+
+        drawBoard();
+
+
+        if (remainingPaths.length === 0) {
+
+            completeLevel();
+
+        }
+
+    }, 250);
 
 }
 
 
-/* WRONG */
+/* =========================
+   WRONG MOVE
+========================= */
 
-function loseLife() {
+function wrongMove() {
 
     lives--;
 
     updateLives();
 
 
+    statusMessage.textContent =
+        "✕ WRONG PATH — LIFE LOST";
+
+
+    statusMessage.className =
+        "status-message status-error";
+
+
     if (lives <= 0) {
 
-        gameOver.classList.remove("hidden");
+        setTimeout(() => {
 
-        return;
+            gameOver.classList.remove(
+                "hidden"
+            );
+
+        }, 400);
 
     }
-
-
-    const remaining =
-        lives === 1
-            ? "1 life"
-            : `${lives} lives`;
-
-
-    messageText.textContent =
-        `⚠️ WRONG MOVE — ${remaining} remaining. Think carefully.`;
-
-    message.classList.remove("hidden");
 
 }
 
 
-/* LIVES */
+/* =========================
+   LIVES
+========================= */
 
 function updateLives() {
 
-    const lifeElements = [
+    let hearts = "";
 
-        document.getElementById("life1"),
+    for (let i = 0; i < 3; i++) {
 
-        document.getElementById("life2"),
+        if (i < lives) {
 
-        document.getElementById("life3")
+            hearts += "❤️ ";
 
-    ];
+        } else {
 
-
-    lifeElements.forEach(
-        (element, index) => {
-
-            element.textContent =
-                index < lives
-                    ? "❤️"
-                    : "🖤";
+            hearts += "🖤 ";
 
         }
+
+    }
+
+    livesElement.textContent =
+        hearts.trim();
+}
+
+
+/* =========================
+   LEVEL COMPLETE
+========================= */
+
+function completeLevel() {
+
+    const level =
+        levels[currentLevel];
+
+
+    hiddenWord.textContent =
+        level.word;
+
+
+    completedWord.textContent =
+        `${level.word} IDENTIFIED ✓`;
+
+
+    levelComplete.classList.remove(
+        "hidden"
     );
 
 }
 
 
-/* NEXT LEVEL */
+/* =========================
+   NEXT LEVEL
+========================= */
 
-nextButton.addEventListener(
+completeNextButton.addEventListener(
     "click",
     () => {
 
         currentLevel++;
 
-        loadLevel();
+        if (
+            currentLevel >= levels.length
+        ) {
+
+            showFinalScreen();
+
+        } else {
+
+            loadLevel();
+
+        }
 
     }
 );
 
 
-/* RETRY */
+/* =========================
+   RETRY
+========================= */
 
 retryButton.addEventListener(
     "click",
@@ -290,7 +434,9 @@ retryButton.addEventListener(
 
         lives = 3;
 
-        gameOver.classList.add("hidden");
+        gameOver.classList.add(
+            "hidden"
+        );
 
         loadLevel();
 
@@ -298,37 +444,40 @@ retryButton.addEventListener(
 );
 
 
-/* SECRET / CONTINUE */
+/* =========================
+   FINAL SCREEN
+========================= */
+
+function showFinalScreen() {
+
+    finalScreen.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =========================
+   SECRET BUTTON
+========================= */
 
 secretButton.addEventListener(
     "click",
     () => {
 
-        victory.classList.add("hidden");
+        finalScreen.classList.add(
+            "hidden"
+        );
 
-        currentLevel++;
-
-        /*
-         * Later this will unlock
-         * Level 51 and beyond.
-         */
-
-        if (currentLevel < levels.length) {
-
-            loadLevel();
-
-        } else {
-
-            alert(
-                "SECRET LEVEL SYSTEM READY."
-            );
-
-        }
+        statusMessage.textContent =
+            "SECRET LEVEL SYSTEM READY.";
 
     }
 );
 
 
-/* START */
+/* =========================
+   START GAME
+========================= */
 
 startGame();
