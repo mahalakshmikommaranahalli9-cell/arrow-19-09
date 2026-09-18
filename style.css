@@ -1,55 +1,73 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 
 :root {
-    --background: #050505;
-    --panel: #101010;
-    --panel-light: #171717;
-    --border: #2a2a2a;
-    --text: #f5f5f5;
-    --muted: #777;
-    --danger: #ff4545;
-    --success: #55e889;
+
+    --background: #050608;
+
+    --panel: #0c0f14;
+
+    --panel2: #11151c;
+
+    --text: #f4f7fb;
+
+    --muted: #89919e;
+
+    --green: #00ff9d;
+
+    --red: #ff4057;
+
+    --yellow: #ffd166;
+
 }
 
 
 body {
+
     min-height: 100vh;
-
-    background:
-        radial-gradient(
-            circle at top,
-            #171717,
-            #050505 55%,
-            #000
-        );
-
-    color: var(--text);
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
+
+    color: var(--text);
+
+    background:
+
+        radial-gradient(
+            circle at top,
+            #18201d,
+            #050608 55%
+        );
+
 }
 
 
+/* ==============================
+   MAIN CONTAINER
+============================== */
+
 .game-container {
+
     width: 100%;
+
     max-width: 1200px;
 
     margin: auto;
 
     padding: 25px;
+
 }
 
 
-/* =========================
+/* ==============================
    HEADER
-========================= */
+============================== */
 
 .top-bar {
 
@@ -58,25 +76,25 @@ body {
     grid-template-columns:
         1fr
         auto
-        1fr;
+        auto;
 
     align-items: center;
 
-    gap: 20px;
+    gap: 25px;
 
-    padding-bottom: 22px;
+    margin-bottom: 25px;
 
-    border-bottom: 1px solid var(--border);
 }
 
 
 .logo-area h1 {
 
-    font-size: 38px;
+    font-size: 42px;
 
-    letter-spacing: 9px;
+    letter-spacing: 7px;
 
-    font-weight: 900;
+    color: var(--green);
+
 }
 
 
@@ -84,17 +102,31 @@ body {
 
     margin-top: 5px;
 
-    color: var(--muted);
-
-    font-size: 10px;
+    font-size: 12px;
 
     letter-spacing: 3px;
+
+    color: var(--muted);
+
 }
 
 
 .level-box {
 
+    padding:
+        10px
+        22px;
+
+    background: var(--panel);
+
+    border:
+        1px solid
+        #242a33;
+
+    border-radius: 10px;
+
     text-align: center;
+
 }
 
 
@@ -102,37 +134,41 @@ body {
 
     display: block;
 
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
     color: var(--muted);
 
-    font-size: 9px;
-
-    letter-spacing: 3px;
 }
 
 
 .level-box strong {
 
-    font-size: 32px;
+    font-size: 28px;
+
+    color: var(--green);
+
 }
 
 
 .lives {
 
-    text-align: right;
+    font-size: 22px;
 
-    font-size: 23px;
+    white-space: nowrap;
 
-    letter-spacing: 3px;
 }
 
 
-/* =========================
+/* ==============================
    PROGRESS
-========================= */
+============================== */
 
 .progress-section {
 
-    margin-top: 20px;
+    margin-bottom: 20px;
+
 }
 
 
@@ -142,112 +178,126 @@ body {
 
     justify-content: space-between;
 
+    margin-bottom: 8px;
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+
     color: var(--muted);
 
-    font-size: 11px;
+}
 
-    letter-spacing: 2px;
 
-    margin-bottom: 8px;
+#difficulty {
+
+    color: var(--yellow);
+
 }
 
 
 .progress-bar {
 
-    height: 4px;
-
-    width: 100%;
-
-    background: #222;
-
-    border-radius: 10px;
+    height: 7px;
 
     overflow: hidden;
+
+    background: #191e26;
+
+    border-radius: 20px;
+
 }
 
 
 #progressFill {
 
-    height: 100%;
-
     width: 0%;
 
-    background: white;
+    height: 100%;
+
+    background: var(--green);
 
     transition:
-        width 0.5s ease;
+        width
+        0.3s
+        ease;
+
 }
 
 
-/* =========================
+/* ==============================
    INSTRUCTION
-========================= */
+============================== */
 
 .instruction {
 
+    margin-bottom: 18px;
+
     text-align: center;
 
-    margin-top: 30px;
 }
 
 
-.instruction p {
+.instruction p:first-child {
 
-    color: #ddd;
+    font-size: 16px;
 
-    font-size: 14px;
+    font-weight: bold;
 
-    letter-spacing: 1px;
 }
 
 
-.instruction .small-hint {
+.small-hint {
 
-    margin-top: 8px;
+    margin-top: 7px;
+
+    font-size: 12px;
 
     color: var(--muted);
 
-    font-size: 11px;
 }
 
 
-/* =========================
-   HIDDEN WORD
-========================= */
+/* ==============================
+   WORD
+============================== */
 
 .word-area {
 
+    margin-bottom: 18px;
+
     text-align: center;
 
-    margin-top: 25px;
 }
 
 
 .word-label {
 
-    display: block;
+    font-size: 10px;
+
+    letter-spacing: 4px;
 
     color: var(--muted);
 
-    font-size: 9px;
-
-    letter-spacing: 3px;
 }
 
 
 #hiddenWord {
 
-    margin-top: 6px;
+    margin-top: 7px;
 
-    font-size: 25px;
+    font-size: 32px;
 
-    letter-spacing: 8px;
+    letter-spacing: 12px;
+
+    color: var(--green);
+
 }
 
 
-/* =========================
+/* ==============================
    GAME BOARD
-========================= */
+============================== */
 
 .game-board {
 
@@ -259,199 +309,216 @@ body {
 
     height: 520px;
 
-    margin: 30px auto;
-
-    background:
-        linear-gradient(
-            rgba(255,255,255,0.025) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(255,255,255,0.025) 1px,
-            transparent 1px
-        );
-
-    background-size: 25px 25px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 14px;
+    margin:
+        0
+        auto;
 
     overflow: hidden;
+
+    border:
+        1px
+        solid
+        #29313c;
+
+    border-radius: 15px;
+
+    background-color: #080b0f;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,0.035)
+            1px,
+            transparent
+            1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.035)
+            1px,
+            transparent
+            1px
+        );
+
+    background-size:
+        25px
+        25px;
+
+    box-shadow:
+        0
+        0
+        40px
+        rgba(0,0,0,0.4);
+
 }
 
 
-/* =========================
-   PATH
-========================= */
+/* ==============================
+   SVG
+============================== */
 
-.arrow-path {
+#gameBoard svg {
 
-    position: absolute;
+    display: block;
 
-    height: 6px;
+    width: 100%;
 
-    background: #f5f5f5;
+    height: 100%;
 
-    border-radius: 20px;
+}
 
-    transform-origin: left center;
+
+/* ==============================
+   ARROWS
+============================== */
+
+.arrow-line {
+
+    stroke: var(--green);
+
+    stroke-width: 6;
+
+    fill: none;
+
+    stroke-linecap: round;
+
+    vector-effect:
+        non-scaling-stroke;
+
+    transition:
+        stroke
+        0.2s
+        ease;
+
+}
+
+
+.arrow-hit {
+
+    stroke: transparent;
+
+    stroke-width: 28;
+
+    fill: none;
 
     cursor: pointer;
 
-    transition:
-        opacity 0.25s ease,
-        transform 0.25s ease;
+    vector-effect:
+        non-scaling-stroke;
 
-    box-shadow:
-        0 0 0 1px rgba(255,255,255,0.05);
 }
 
 
-.arrow-path:hover {
+.arrow-group:hover
+.arrow-line {
 
-    background: #ffffff;
+    stroke-width: 8;
 
-    height: 8px;
 }
 
 
-.arrow-path.removing {
+.arrow-group.removed {
 
     opacity: 0;
 
     transform:
-        scaleX(0.2)
-        rotate(var(--angle));
+        scale(0.95);
+
+    transform-origin:
+        center;
+
+    transition:
+        all
+        0.25s
+        ease;
+
 }
 
 
-/* =========================
-   ARROW HEAD
-========================= */
-
-.arrow-head {
-
-    position: absolute;
-
-    right: -3px;
-
-    top: 50%;
-
-    transform:
-        translateY(-50%)
-        rotate(45deg);
-
-    width: 13px;
-
-    height: 13px;
-
-    border-top: 4px solid white;
-
-    border-right: 4px solid white;
-}
-
-
-/* =========================
+/* ==============================
    STATUS
-========================= */
+============================== */
 
 .status-message {
 
-    min-height: 25px;
+    min-height: 30px;
+
+    margin-top: 15px;
 
     text-align: center;
 
-    font-size: 13px;
-
-    letter-spacing: 1px;
-
-    margin: 15px auto;
-}
-
-
-.status-success {
-
-    color: var(--success);
-}
-
-
-.status-error {
-
-    color: var(--danger);
-
-    animation: shake 0.3s;
-}
-
-
-@keyframes shake {
-
-    0% {
-        transform: translateX(0);
-    }
-
-    25% {
-        transform: translateX(-8px);
-    }
-
-    50% {
-        transform: translateX(8px);
-    }
-
-    75% {
-        transform: translateX(-5px);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
-}
-
-
-/* =========================
-   BUTTON
-========================= */
-
-.next-button {
-
-    display: block;
-
-    margin: 20px auto;
-
-    padding: 15px 30px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    background: white;
-
-    color: black;
+    font-size: 14px;
 
     font-weight: bold;
 
     letter-spacing: 2px;
 
+    color: var(--green);
+
+}
+
+
+/* ==============================
+   BUTTON
+============================== */
+
+button {
+
+    border: none;
+
+    outline: none;
+
     cursor: pointer;
+
+    font-weight: bold;
+
+}
+
+
+.next-button {
+
+    display: block;
+
+    margin:
+        10px
+        auto;
+
+    padding:
+        13px
+        25px;
+
+    color: #000;
+
+    background: var(--green);
+
+    border-radius: 8px;
+
 }
 
 
 .next-button:hover {
 
-    transform: scale(1.03);
+    transform:
+        translateY(-2px);
+
 }
 
+
+/* ==============================
+   HIDDEN
+============================== */
 
 .hidden {
 
     display: none !important;
+
 }
 
 
-/* =========================
+/* ==============================
    OVERLAY
-========================= */
+============================== */
 
 .overlay {
 
@@ -459,8 +526,7 @@ body {
 
     inset: 0;
 
-    background:
-        rgba(0,0,0,0.94);
+    z-index: 100;
 
     display: flex;
 
@@ -468,92 +534,150 @@ body {
 
     justify-content: center;
 
-    z-index: 1000;
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.82);
+
+    backdrop-filter:
+        blur(8px);
+
 }
 
 
 .overlay-card {
 
-    width: 90%;
+    width: 100%;
 
-    max-width: 500px;
+    max-width: 430px;
 
-    padding: 50px 30px;
+    padding: 45px 30px;
 
     text-align: center;
 
-    background: #101010;
+    background: var(--panel);
 
-    border: 1px solid #333;
+    border:
+        1px
+        solid
+        #303744;
 
-    border-radius: 15px;
+    border-radius: 18px;
+
+    box-shadow:
+        0
+        20px
+        70px
+        rgba(0,0,0,0.7);
+
 }
 
 
 .big-icon {
 
-    font-size: 50px;
+    margin-bottom: 15px;
 
-    margin-bottom: 20px;
+    font-size: 55px;
+
 }
 
 
 .overlay-card h2 {
 
-    font-size: 27px;
+    margin-bottom: 12px;
 
-    letter-spacing: 4px;
+    letter-spacing: 3px;
 
-    margin-bottom: 15px;
 }
 
 
 .overlay-card p {
 
-    color: #aaa;
+    margin-bottom: 22px;
 
-    line-height: 1.6;
-}
+    color: var(--muted);
 
-
-.mystery-text {
-
-    margin-top: 20px;
-
-    color: white !important;
-
-    font-size: 18px;
 }
 
 
 .overlay-card button {
 
-    margin-top: 25px;
+    padding:
+        13px
+        25px;
 
-    padding: 14px 28px;
+    color: #000;
 
-    border: none;
+    background: var(--green);
 
-    border-radius: 7px;
+    border-radius: 8px;
 
-    background: white;
-
-    color: black;
-
-    font-weight: bold;
-
-    cursor: pointer;
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+.mystery-text {
 
-@media (max-width: 700px) {
+    color: var(--green) !important;
+
+}
+
+
+/* ==============================
+   SHAKE
+============================== */
+
+.board-shake {
+
+    animation:
+        boardShake
+        0.4s
+        ease;
+
+}
+
+
+@keyframes boardShake {
+
+    0% {
+        transform:
+            translateX(0);
+    }
+
+    25% {
+        transform:
+            translateX(-8px);
+    }
+
+    50% {
+        transform:
+            translateX(8px);
+    }
+
+    75% {
+        transform:
+            translateX(-5px);
+    }
+
+    100% {
+        transform:
+            translateX(0);
+    }
+
+}
+
+
+/* ==============================
+   MOBILE
+============================== */
+
+@media (
+    max-width: 700px
+) {
 
     .game-container {
+
         padding: 15px;
+
     }
 
 
@@ -562,65 +686,74 @@ body {
         grid-template-columns:
             1fr
             1fr;
+
+        gap: 12px;
+
     }
 
 
     .logo-area {
 
-        grid-column: 1 / -1;
+        grid-column:
+            1 / -1;
 
-        text-align: center;
+    }
+
+
+    .logo-area h1 {
+
+        font-size: 32px;
+
     }
 
 
     .lives {
 
         text-align: right;
+
     }
 
 
     .game-board {
 
-        height: 400px;
-    }
+        height: 420px;
 
-
-    .instruction p {
-
-        font-size: 12px;
     }
 
 
     #hiddenWord {
 
-        font-size: 20px;
+        font-size: 24px;
 
-        letter-spacing: 5px;
     }
 
 }
-/* =========================
-   HARROW SVG BOARD
-========================= */
 
-#gameBoard svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
 
-#gameBoard svg line {
-    vector-effect: non-scaling-stroke;
-}
+@media (
+    max-width: 450px
+) {
 
-.board-shake {
-    animation: boardShake 0.4s ease;
-}
+    .game-board {
 
-@keyframes boardShake {
-    0%   { transform: translateX(0); }
-    25%  { transform: translateX(-8px); }
-    50%  { transform: translateX(8px); }
-    75%  { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
+        height: 350px;
+
+    }
+
+
+    .logo-area h1 {
+
+        font-size: 27px;
+
+        letter-spacing: 5px;
+
+    }
+
+
+    .lives {
+
+        font-size: 18px;
+
+    }
+
 }
