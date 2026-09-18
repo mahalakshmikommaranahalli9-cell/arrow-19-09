@@ -1,3 +1,7 @@
+/* =====================================================
+   HARROW GAME ENGINE
+===================================================== */
+
 let currentLevel = 0;
 let lives = 3;
 let remainingPaths = [];
@@ -22,9 +26,9 @@ const secretButton =
     document.getElementById("secretButton");
 
 
-/* ==========================================
-   START GAME
-========================================== */
+/* =====================================================
+   START
+===================================================== */
 
 function startGame() {
 
@@ -39,9 +43,9 @@ function startGame() {
 }
 
 
-/* ==========================================
+/* =====================================================
    LOAD LEVEL
-========================================== */
+===================================================== */
 
 function loadLevel() {
 
@@ -65,21 +69,20 @@ function loadLevel() {
         level.difficulty;
 
     hiddenWord.textContent =
-        "?".repeat(level.word.length);
+        "? ".repeat(level.word.length).trim();
 
     statusMessage.textContent =
         "Study the paths carefully.";
 
     updateLives();
     updateProgress();
-
     drawBoard();
 }
 
 
-/* ==========================================
+/* =====================================================
    DRAW BOARD
-========================================== */
+===================================================== */
 
 function drawBoard() {
 
@@ -102,9 +105,9 @@ function drawBoard() {
     );
 
 
-    /* ======================================
-       DEFINITION
-    ====================================== */
+    /* -----------------------------
+       ARROW MARKER
+    ----------------------------- */
 
     const defs =
         document.createElementNS(
@@ -112,48 +115,19 @@ function drawBoard() {
             "defs"
         );
 
-
     const marker =
         document.createElementNS(
             "http://www.w3.org/2000/svg",
             "marker"
         );
 
-    marker.setAttribute(
-        "id",
-        "harrowArrow"
-    );
-
-    marker.setAttribute(
-        "markerWidth",
-        "14"
-    );
-
-    marker.setAttribute(
-        "markerHeight",
-        "14"
-    );
-
-    marker.setAttribute(
-        "refX",
-        "10"
-    );
-
-    marker.setAttribute(
-        "refY",
-        "5"
-    );
-
-    marker.setAttribute(
-        "orient",
-        "auto"
-    );
-
-    marker.setAttribute(
-        "markerUnits",
-        "strokeWidth"
-    );
-
+    marker.setAttribute("id", "harrowArrow");
+    marker.setAttribute("markerWidth", "8");
+    marker.setAttribute("markerHeight", "8");
+    marker.setAttribute("refX", "7");
+    marker.setAttribute("refY", "3.5");
+    marker.setAttribute("orient", "auto");
+    marker.setAttribute("markerUnits", "strokeWidth");
 
     const polygon =
         document.createElementNS(
@@ -163,12 +137,12 @@ function drawBoard() {
 
     polygon.setAttribute(
         "points",
-        "0,0 10,5 0,10"
+        "0,0 7,3.5 0,7"
     );
 
     polygon.setAttribute(
         "fill",
-        "#00ff9d"
+        "#ffffff"
     );
 
     marker.appendChild(polygon);
@@ -176,9 +150,9 @@ function drawBoard() {
     svg.appendChild(defs);
 
 
-    /* ======================================
-       DRAW EVERY PATH
-    ====================================== */
+    /* -----------------------------
+       DRAW PATHS
+    ----------------------------- */
 
     remainingPaths.forEach(path => {
 
@@ -188,17 +162,12 @@ function drawBoard() {
                 "g"
             );
 
-        group.setAttribute(
-            "data-id",
-            path.id
-        );
+        group.classList.add("arrow-group");
 
-        group.classList.add(
-            "arrow-group"
-        );
+        group.dataset.id = path.id;
 
 
-        /* MAIN LINE */
+        /* MAIN WHITE PATH */
 
         const line =
             document.createElementNS(
@@ -226,19 +195,14 @@ function drawBoard() {
             path.y2
         );
 
-        /* IMPORTANT:
-           Put the stroke directly here.
-           This guarantees the line is visible.
-        */
-
         line.setAttribute(
             "stroke",
-            "#00ff9d"
+            "#ffffff"
         );
 
         line.setAttribute(
             "stroke-width",
-            "7"
+            "3"
         );
 
         line.setAttribute(
@@ -247,23 +211,14 @@ function drawBoard() {
         );
 
         line.setAttribute(
-            "fill",
-            "none"
-        );
-
-        line.setAttribute(
             "marker-end",
             "url(#harrowArrow)"
         );
 
-        line.classList.add(
-            "arrow-line"
-        );
+        line.classList.add("arrow-line");
 
 
-        /* ==================================
-           INVISIBLE CLICK LINE
-        ================================== */
+        /* BIG INVISIBLE CLICK TARGET */
 
         const hit =
             document.createElementNS(
@@ -298,17 +253,10 @@ function drawBoard() {
 
         hit.setAttribute(
             "stroke-width",
-            "30"
+            "28"
         );
 
-        hit.setAttribute(
-            "stroke-linecap",
-            "round"
-        );
-
-        hit.classList.add(
-            "arrow-hit"
-        );
+        hit.classList.add("arrow-hit");
 
 
         group.appendChild(line);
@@ -319,11 +267,7 @@ function drawBoard() {
 
         hit.addEventListener(
             "click",
-            function () {
-
-                attemptRemove(path.id);
-
-            }
+            () => attemptRemove(path.id)
         );
 
     });
@@ -333,68 +277,11 @@ function drawBoard() {
 }
 
 
-/* ==========================================
-   FIND PATH
-========================================== */
+/* =====================================================
+   GEOMETRY
+===================================================== */
 
-function findPath(id) {
-
-    return remainingPaths.find(
-        path => path.id === id
-    );
-}
-
-
-/* ==========================================
-   REMOVE ATTEMPT
-========================================== */
-
-function attemptRemove(id) {
-
-    const path = findPath(id);
-
-    if (!path) {
-        return;
-    }
-
-    if (isPathSafe(path)) {
-
-        removePath(id);
-
-    } else {
-
-        wrongMove();
-
-    }
-}
-
-
-/* ==========================================
-   CROSSING DETECTION
-========================================== */
-
-function orientation(
-    ax,
-    ay,
-    bx,
-    by,
-    cx,
-    cy
-) {
-
-    const value =
-        (by - ay) * (cx - bx) -
-        (bx - ax) * (cy - by);
-
-    if (Math.abs(value) < 0.00001) {
-        return 0;
-    }
-
-    return value > 0 ? 1 : 2;
-}
-
-
-function pointOnSegment(
+function crossProduct(
     ax,
     ay,
     bx,
@@ -404,75 +291,146 @@ function pointOnSegment(
 ) {
 
     return (
-        bx >= Math.min(ax, cx) &&
-        bx <= Math.max(ax, cx) &&
-        by >= Math.min(ay, cy) &&
-        by <= Math.max(ay, cy)
+        (bx - ax) * (cy - ay) -
+        (by - ay) * (cx - ax)
     );
 }
 
 
-/*
-   TRUE only when the two paths
-   actually CROSS.
+function segmentsIntersect(a, b) {
 
-   Touching at the end of a letter
-   is NOT treated as crossing.
-*/
+    const d1 =
+        crossProduct(
+            a.x1,
+            a.y1,
+            a.x2,
+            a.y2,
+            b.x1,
+            b.y1
+        );
 
-function properIntersection(a, b) {
+    const d2 =
+        crossProduct(
+            a.x1,
+            a.y1,
+            a.x2,
+            a.y2,
+            b.x2,
+            b.y2
+        );
 
-    const o1 = orientation(
-        a.x1,
-        a.y1,
-        a.x2,
-        a.y2,
-        b.x1,
-        b.y1
+    const d3 =
+        crossProduct(
+            b.x1,
+            b.y1,
+            b.x2,
+            b.y2,
+            a.x1,
+            a.y1
+        );
+
+    const d4 =
+        crossProduct(
+            b.x1,
+            b.y1,
+            b.x2,
+            b.y2,
+            a.x2,
+            a.y2
+        );
+
+    return (
+        ((d1 > 0 && d2 < 0) ||
+         (d1 < 0 && d2 > 0)) &&
+
+        ((d3 > 0 && d4 < 0) ||
+         (d3 < 0 && d4 > 0))
     );
-
-    const o2 = orientation(
-        a.x1,
-        a.y1,
-        a.x2,
-        a.y2,
-        b.x2,
-        b.y2
-    );
-
-    const o3 = orientation(
-        b.x1,
-        b.y1,
-        b.x2,
-        b.y2,
-        a.x1,
-        a.y1
-    );
-
-    const o4 = orientation(
-        b.x1,
-        b.y1,
-        b.x2,
-        b.y2,
-        a.x2,
-        a.y2
-    );
+}
 
 
-    /*
-       Normal crossing
-    */
+/* =====================================================
+   ARROW DIRECTION
+===================================================== */
 
-    if (
-        o1 !== o2 &&
-        o3 !== o4 &&
-        o1 !== 0 &&
-        o2 !== 0 &&
-        o3 !== 0 &&
-        o4 !== 0
+function getDirection(path) {
+
+    const dx =
+        path.x2 - path.x1;
+
+    const dy =
+        path.y2 - path.y1;
+
+    const length =
+        Math.sqrt(
+            dx * dx +
+            dy * dy
+        );
+
+    return {
+        x: dx / length,
+        y: dy / length
+    };
+}
+
+
+/* =====================================================
+   IS ARROW BLOCKED?
+=====================================================
+
+   We look slightly beyond the arrowhead.
+
+   If another remaining path is directly in the
+   arrow's way, the arrow cannot be removed.
+
+===================================================== */
+
+function isBlocked(path) {
+
+    const direction =
+        getDirection(path);
+
+    const extension = 70;
+
+    const probe = {
+
+        x1: path.x2,
+
+        y1: path.y2,
+
+        x2:
+            path.x2 +
+            direction.x *
+            extension,
+
+        y2:
+            path.y2 +
+            direction.y *
+            extension
+    };
+
+
+    for (
+        const other
+        of remainingPaths
     ) {
 
-        return true;
+        if (
+            other.id === path.id
+        ) {
+            continue;
+        }
+
+
+        if (
+            segmentsIntersect(
+                probe,
+                other
+            )
+        ) {
+
+            return true;
+        }
     }
 
 
@@ -480,42 +438,43 @@ function properIntersection(a, b) {
 }
 
 
-/* ==========================================
-   SAFE PATH
-========================================== */
+/* =====================================================
+   ATTEMPT REMOVE
+===================================================== */
 
-function isPathSafe(path) {
+function attemptRemove(id) {
 
-    for (const other of remainingPaths) {
+    const path =
+        remainingPaths.find(
+            p => p.id === id
+        );
 
-        if (other.id === path.id) {
-            continue;
-        }
-
-        if (
-            properIntersection(
-                path,
-                other
-            )
-        ) {
-
-            return false;
-        }
+    if (!path) {
+        return;
     }
 
-    return true;
+
+    if (isBlocked(path)) {
+
+        wrongMove(path);
+
+        return;
+    }
+
+
+    removePath(path);
 }
 
 
-/* ==========================================
-   REMOVE PATH
-========================================== */
+/* =====================================================
+   REMOVE
+===================================================== */
 
-function removePath(id) {
+function removePath(path) {
 
     const group =
         document.querySelector(
-            `[data-id="${id}"]`
+            `[data-id="${path.id}"]`
         );
 
     if (group) {
@@ -526,48 +485,43 @@ function removePath(id) {
     }
 
 
-    setTimeout(
-        function () {
-
-            remainingPaths =
-                remainingPaths.filter(
-                    path =>
-                        path.id !== id
-                );
-
-            updateProgress();
-
-            drawBoard();
+    statusMessage.textContent =
+        "PATH CLEARED ✓";
 
 
-            if (
-                remainingPaths.length === 0
-            ) {
+    setTimeout(() => {
 
-                completeLevel();
+        remainingPaths =
+            remainingPaths.filter(
+                p =>
+                    p.id !== path.id
+            );
 
-            } else {
+        updateProgress();
+        drawBoard();
 
-                statusMessage.textContent =
-                    "GOOD MOVE ✓";
 
-            }
+        if (
+            remainingPaths.length === 0
+        ) {
 
-        },
-        250
-    );
+            completeLevel();
+        }
+
+    }, 220);
 }
 
 
-/* ==========================================
+/* =====================================================
    WRONG MOVE
-========================================== */
+===================================================== */
 
-function wrongMove() {
+function wrongMove(path) {
 
     lives--;
 
     updateLives();
+
 
     gameBoard.classList.remove(
         "board-shake"
@@ -579,27 +533,28 @@ function wrongMove() {
         "board-shake"
     );
 
+
     statusMessage.textContent =
-        "BLOCKED — LOSE 1 LIFE";
+        "BLOCKED — PATH CROSSES ANOTHER LINE";
 
 
     if (lives <= 0) {
 
         setTimeout(
             showGameOver,
-            500
+            450
         );
     }
 }
 
 
-/* ==========================================
+/* =====================================================
    LIVES
-========================================== */
+===================================================== */
 
 function updateLives() {
 
-    let output = "";
+    let hearts = "";
 
     for (
         let i = 0;
@@ -607,30 +562,30 @@ function updateLives() {
         i++
     ) {
 
-        if (i < lives) {
+        hearts +=
+            i < lives
+                ? "❤️ "
+                : "🖤 ";
 
-            output += "❤️ ";
-
-        } else {
-
-            output += "🖤 ";
-
-        }
     }
 
     livesDisplay.textContent =
-        output.trim();
+        hearts.trim();
 }
 
 
-/* ==========================================
+/* =====================================================
    PROGRESS
-========================================== */
+===================================================== */
 
 function updateProgress() {
 
     const level =
         levels[currentLevel];
+
+    if (!level) {
+        return;
+    }
 
     const total =
         level.paths.length;
@@ -640,16 +595,17 @@ function updateProgress() {
         remainingPaths.length;
 
     const percentage =
-        (removed / total) * 100;
+        (removed / total) *
+        100;
 
     progressFill.style.width =
-        percentage + "%";
+        `${percentage}%`;
 }
 
 
-/* ==========================================
-   COMPLETE LEVEL
-========================================== */
+/* =====================================================
+   LEVEL COMPLETE
+===================================================== */
 
 function completeLevel() {
 
@@ -670,16 +626,17 @@ function completeLevel() {
 }
 
 
-/* ==========================================
+/* =====================================================
    NEXT LEVEL
-========================================== */
+===================================================== */
 
 function nextLevel() {
 
     currentLevel++;
 
     if (
-        currentLevel >= levels.length
+        currentLevel >=
+        levels.length
     ) {
 
         showFinalScreen();
@@ -687,13 +644,14 @@ function nextLevel() {
         return;
     }
 
+
     loadLevel();
 }
 
 
-/* ==========================================
+/* =====================================================
    GAME OVER
-========================================== */
+===================================================== */
 
 function showGameOver() {
 
@@ -703,9 +661,9 @@ function showGameOver() {
 }
 
 
-/* ==========================================
-   FINAL SCREEN
-========================================== */
+/* =====================================================
+   FINAL
+===================================================== */
 
 function showFinalScreen() {
 
@@ -715,13 +673,13 @@ function showFinalScreen() {
 }
 
 
-/* ==========================================
+/* =====================================================
    BUTTONS
-========================================== */
+===================================================== */
 
 retryButton.addEventListener(
     "click",
-    function () {
+    () => {
 
         lives = 3;
 
@@ -737,7 +695,7 @@ retryButton.addEventListener(
 
 completeNextButton.addEventListener(
     "click",
-    function () {
+    () => {
 
         levelComplete.classList.add(
             "hidden"
@@ -751,7 +709,7 @@ completeNextButton.addEventListener(
 
 secretButton.addEventListener(
     "click",
-    function () {
+    () => {
 
         finalScreen.classList.add(
             "hidden"
@@ -763,8 +721,8 @@ secretButton.addEventListener(
 );
 
 
-/* ==========================================
-   START
-========================================== */
+/* =====================================================
+   START GAME
+===================================================== */
 
 startGame();
