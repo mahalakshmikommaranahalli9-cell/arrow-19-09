@@ -1,6 +1,7 @@
-/* =====================================================
-   HARROW GAME ENGINE
-===================================================== */
+// ============================================
+// HARROW - TECHNICAL ARROW CHALLENGE
+// REAL GEOMETRY CROSSING DETECTION
+// ============================================
 
 let currentLevel = 0;
 let lives = 3;
@@ -10,42 +11,40 @@ const gameBoard = document.getElementById("gameBoard");
 const levelNumber = document.getElementById("levelNumber");
 const livesDisplay = document.getElementById("lives");
 const progressText = document.getElementById("progressText");
-const progressFill = document.getElementById("progressFill");
 const difficultyDisplay = document.getElementById("difficulty");
+const progressFill = document.getElementById("progressFill");
 const hiddenWord = document.getElementById("hiddenWord");
 const statusMessage = document.getElementById("statusMessage");
+
+const nextButton = document.getElementById("nextButton");
+const retryButton = document.getElementById("retryButton");
+const completeNextButton = document.getElementById("completeNextButton");
 
 const gameOver = document.getElementById("gameOver");
 const levelComplete = document.getElementById("levelComplete");
 const finalScreen = document.getElementById("finalScreen");
 
-const retryButton = document.getElementById("retryButton");
-const completeNextButton =
-    document.getElementById("completeNextButton");
-const secretButton =
-    document.getElementById("secretButton");
+const completedWord = document.getElementById("completedWord");
 
 
-/* =====================================================
-   START
-===================================================== */
+// ============================================
+// START GAME
+// ============================================
 
 function startGame() {
 
     currentLevel = 0;
     lives = 3;
 
-    gameOver.classList.add("hidden");
-    levelComplete.classList.add("hidden");
-    finalScreen.classList.add("hidden");
+    hideAllOverlays();
 
     loadLevel();
 }
 
 
-/* =====================================================
-   LOAD LEVEL
-===================================================== */
+// ============================================
+// LOAD LEVEL
+// ============================================
 
 function loadLevel() {
 
@@ -56,17 +55,21 @@ function loadLevel() {
         return;
     }
 
-    remainingPaths =
-        JSON.parse(JSON.stringify(level.paths));
+    remainingPaths = level.paths.map(path => ({
+        ...path
+    }));
 
     levelNumber.textContent =
-        String(level.level).padStart(2, "0");
+        String(currentLevel + 1).padStart(2, "0");
 
     progressText.textContent =
-        `LEVEL ${level.level} / ${levels.length}`;
+        `LEVEL ${currentLevel + 1} / ${levels.length}`;
 
     difficultyDisplay.textContent =
-        level.difficulty;
+        level.difficulty || "EASY";
+
+    progressFill.style.width =
+        `${((currentLevel + 1) / levels.length) * 100}%`;
 
     hiddenWord.textContent =
         "? ".repeat(level.word.length).trim();
@@ -74,70 +77,57 @@ function loadLevel() {
     statusMessage.textContent =
         "Study the paths carefully.";
 
+    statusMessage.className =
+        "status-message";
+
     updateLives();
-    updateProgress();
+
     drawBoard();
 }
 
 
-/* =====================================================
-   DRAW BOARD
-===================================================== */
+// ============================================
+// DRAW BOARD
+// ============================================
 
 function drawBoard() {
 
     gameBoard.innerHTML = "";
 
-    const svg =
-        document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "svg"
-        );
+    const svgNS = "http://www.w3.org/2000/svg";
 
-    svg.setAttribute(
-        "viewBox",
-        "0 0 850 520"
+    const svg = document.createElementNS(svgNS, "svg");
+
+    svg.setAttribute("viewBox", "0 0 850 520");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+    // ----------------------------------------
+    // Arrow marker
+    // ----------------------------------------
+
+    const defs = document.createElementNS(svgNS, "defs");
+
+    const marker = document.createElementNS(
+        svgNS,
+        "marker"
     );
 
-    svg.setAttribute(
-        "preserveAspectRatio",
-        "xMidYMid meet"
-    );
-
-
-    /* -----------------------------
-       ARROW MARKER
-    ----------------------------- */
-
-    const defs =
-        document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "defs"
-        );
-
-    const marker =
-        document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "marker"
-        );
-
-    marker.setAttribute("id", "harrowArrow");
-    marker.setAttribute("markerWidth", "8");
-    marker.setAttribute("markerHeight", "8");
-    marker.setAttribute("refX", "7");
+    marker.setAttribute("id", "arrowHead");
+    marker.setAttribute("markerWidth", "7");
+    marker.setAttribute("markerHeight", "7");
+    marker.setAttribute("refX", "6");
     marker.setAttribute("refY", "3.5");
     marker.setAttribute("orient", "auto");
     marker.setAttribute("markerUnits", "strokeWidth");
 
-    const polygon =
-        document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "polygon"
-        );
+    const polygon = document.createElementNS(
+        svgNS,
+        "polygon"
+    );
 
     polygon.setAttribute(
         "points",
-        "0,0 7,3.5 0,7"
+        "0 0, 7 3.5, 0 7"
     );
 
     polygon.setAttribute(
@@ -150,49 +140,42 @@ function drawBoard() {
     svg.appendChild(defs);
 
 
-    /* -----------------------------
-       DRAW PATHS
-    ----------------------------- */
+    // ----------------------------------------
+    // Draw every remaining arrow
+    // ----------------------------------------
 
     remainingPaths.forEach(path => {
 
-        const group =
-            document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "g"
-            );
+        const start = getStartPoint(path);
+        const end = getEndPoint(path);
 
-        group.classList.add("arrow-group");
+        // ------------------------------------
+        // Visible white thin arrow
+        // ------------------------------------
 
-        group.dataset.id = path.id;
-
-
-        /* MAIN WHITE PATH */
-
-        const line =
-            document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "line"
-            );
+        const line = document.createElementNS(
+            svgNS,
+            "line"
+        );
 
         line.setAttribute(
             "x1",
-            path.x1
+            start.x
         );
 
         line.setAttribute(
             "y1",
-            path.y1
+            start.y
         );
 
         line.setAttribute(
             "x2",
-            path.x2
+            end.x
         );
 
         line.setAttribute(
             "y2",
-            path.y2
+            end.y
         );
 
         line.setAttribute(
@@ -202,7 +185,7 @@ function drawBoard() {
 
         line.setAttribute(
             "stroke-width",
-            "3"
+            "2"
         );
 
         line.setAttribute(
@@ -212,63 +195,68 @@ function drawBoard() {
 
         line.setAttribute(
             "marker-end",
-            "url(#harrowArrow)"
+            "url(#arrowHead)"
         );
 
-        line.classList.add("arrow-line");
+        line.classList.add("harrow-line");
 
 
-        /* BIG INVISIBLE CLICK TARGET */
+        // ------------------------------------
+        // Invisible large click area
+        // ------------------------------------
 
-        const hit =
-            document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "line"
-            );
+        const hitArea = document.createElementNS(
+            svgNS,
+            "line"
+        );
 
-        hit.setAttribute(
+        hitArea.setAttribute(
             "x1",
-            path.x1
+            start.x
         );
 
-        hit.setAttribute(
+        hitArea.setAttribute(
             "y1",
-            path.y1
+            start.y
         );
 
-        hit.setAttribute(
+        hitArea.setAttribute(
             "x2",
-            path.x2
+            end.x
         );
 
-        hit.setAttribute(
+        hitArea.setAttribute(
             "y2",
-            path.y2
+            end.y
         );
 
-        hit.setAttribute(
+        hitArea.setAttribute(
             "stroke",
             "transparent"
         );
 
-        hit.setAttribute(
+        hitArea.setAttribute(
             "stroke-width",
-            "28"
+            "24"
         );
 
-        hit.classList.add("arrow-hit");
+        hitArea.setAttribute(
+            "stroke-linecap",
+            "round"
+        );
 
+        hitArea.style.cursor = "pointer";
 
-        group.appendChild(line);
-        group.appendChild(hit);
-
-        svg.appendChild(group);
-
-
-        hit.addEventListener(
+        hitArea.addEventListener(
             "click",
-            () => attemptRemove(path.id)
+            function () {
+                attemptRemove(path.id);
+            }
         );
+
+
+        svg.appendChild(line);
+        svg.appendChild(hitArea);
 
     });
 
@@ -277,160 +265,160 @@ function drawBoard() {
 }
 
 
-/* =====================================================
-   GEOMETRY
-===================================================== */
+// ============================================
+// GET START POINT
+// ============================================
 
-function crossProduct(
-    ax,
-    ay,
-    bx,
-    by,
-    cx,
-    cy
-) {
-
-    return (
-        (bx - ax) * (cy - ay) -
-        (by - ay) * (cx - ax)
-    );
-}
-
-
-function segmentsIntersect(a, b) {
-
-    const d1 =
-        crossProduct(
-            a.x1,
-            a.y1,
-            a.x2,
-            a.y2,
-            b.x1,
-            b.y1
-        );
-
-    const d2 =
-        crossProduct(
-            a.x1,
-            a.y1,
-            a.x2,
-            a.y2,
-            b.x2,
-            b.y2
-        );
-
-    const d3 =
-        crossProduct(
-            b.x1,
-            b.y1,
-            b.x2,
-            b.y2,
-            a.x1,
-            a.y1
-        );
-
-    const d4 =
-        crossProduct(
-            b.x1,
-            b.y1,
-            b.x2,
-            b.y2,
-            a.x2,
-            a.y2
-        );
-
-    return (
-        ((d1 > 0 && d2 < 0) ||
-         (d1 < 0 && d2 > 0)) &&
-
-        ((d3 > 0 && d4 < 0) ||
-         (d3 < 0 && d4 > 0))
-    );
-}
-
-
-/* =====================================================
-   ARROW DIRECTION
-===================================================== */
-
-function getDirection(path) {
-
-    const dx =
-        path.x2 - path.x1;
-
-    const dy =
-        path.y2 - path.y1;
-
-    const length =
-        Math.sqrt(
-            dx * dx +
-            dy * dy
-        );
+function getStartPoint(path) {
 
     return {
-        x: dx / length,
-        y: dy / length
+        x: Number(path.x),
+        y: Number(path.y)
     };
 }
 
 
-/* =====================================================
-   IS ARROW BLOCKED?
-=====================================================
+// ============================================
+// GET END POINT
+// ============================================
 
-   We look slightly beyond the arrowhead.
+function getEndPoint(path) {
 
-   If another remaining path is directly in the
-   arrow's way, the arrow cannot be removed.
+    const angle =
+        Number(path.angle) * Math.PI / 180;
 
-===================================================== */
+    return {
+        x:
+            Number(path.x) +
+            Math.cos(angle) * Number(path.length),
 
-function isBlocked(path) {
-
-    const direction =
-        getDirection(path);
-
-    const extension = 70;
-
-    const probe = {
-
-        x1: path.x2,
-
-        y1: path.y2,
-
-        x2:
-            path.x2 +
-            direction.x *
-            extension,
-
-        y2:
-            path.y2 +
-            direction.y *
-            extension
+        y:
+            Number(path.y) +
+            Math.sin(angle) * Number(path.length)
     };
+}
 
 
-    for (
-        const other
-        of remainingPaths
-    ) {
+// ============================================
+// ATTEMPT REMOVE
+// ============================================
 
-        if (
-            other.id === path.id
-        ) {
+function attemptRemove(pathId) {
+
+    const selectedPath =
+        remainingPaths.find(
+            path => path.id === pathId
+        );
+
+    if (!selectedPath) {
+        return;
+    }
+
+
+    // ----------------------------------------
+    // REAL GEOMETRY CHECK
+    // ----------------------------------------
+
+    const isBlocked =
+        pathHasCrossing(
+            selectedPath
+        );
+
+
+    if (isBlocked) {
+
+        loseLife();
+
+        showStatus(
+            "✕ PATH BLOCKED — CROSSING DETECTED",
+            "wrong"
+        );
+
+        shakeBoard();
+
+        return;
+    }
+
+
+    // ----------------------------------------
+    // SAFE PATH
+    // ----------------------------------------
+
+    removePath(pathId);
+
+}
+
+
+// ============================================
+// CHECK IF PATH HAS CROSSING
+// ============================================
+
+function pathHasCrossing(selectedPath) {
+
+    for (const otherPath of remainingPaths) {
+
+        if (otherPath.id === selectedPath.id) {
             continue;
         }
 
 
+        const a1 =
+            getStartPoint(selectedPath);
+
+        const a2 =
+            getEndPoint(selectedPath);
+
+        const b1 =
+            getStartPoint(otherPath);
+
+        const b2 =
+            getEndPoint(otherPath);
+
+
         if (
-            segmentsIntersect(
-                probe,
-                other
+            segmentsProperlyCross(
+                a1,
+                a2,
+                b1,
+                b2
             )
         ) {
 
             return true;
         }
+
+    }
+
+    return false;
+}
+
+
+// ============================================
+// PROPER LINE CROSSING
+// ============================================
+//
+// Important:
+// A line touching another line at an endpoint
+// is NOT considered a crossing.
+//
+// Only a real interior X-style intersection
+// causes a life loss.
+// ============================================
+
+function segmentsProperlyCross(a, b, c, d) {
+
+    const o1 = orientation(a, b, c);
+    const o2 = orientation(a, b, d);
+    const o3 = orientation(c, d, a);
+    const o4 = orientation(c, d, b);
+
+
+    // Real intersection inside both segments
+    if (
+        o1 !== o2 &&
+        o3 !== o4
+    ) {
+        return true;
     }
 
 
@@ -438,134 +426,99 @@ function isBlocked(path) {
 }
 
 
-/* =====================================================
-   ATTEMPT REMOVE
-===================================================== */
+// ============================================
+// ORIENTATION
+// ============================================
 
-function attemptRemove(id) {
+function orientation(a, b, c) {
 
-    const path =
-        remainingPaths.find(
-            p => p.id === id
-        );
+    const value =
+        (b.y - a.y) * (c.x - b.x) -
+        (b.x - a.x) * (c.y - b.y);
 
-    if (!path) {
-        return;
+
+    const EPSILON = 0.000001;
+
+
+    if (Math.abs(value) < EPSILON) {
+        return 0;
     }
 
 
-    if (isBlocked(path)) {
-
-        wrongMove(path);
-
-        return;
-    }
-
-
-    removePath(path);
+    return value > 0 ? 1 : 2;
 }
 
 
-/* =====================================================
-   REMOVE
-===================================================== */
+// ============================================
+// REMOVE PATH
+// ============================================
 
-function removePath(path) {
+function removePath(pathId) {
 
-    const group =
-        document.querySelector(
-            `[data-id="${path.id}"]`
+    remainingPaths =
+        remainingPaths.filter(
+            path => path.id !== pathId
         );
 
-    if (group) {
 
-        group.classList.add(
-            "removed"
-        );
+    showStatus(
+        "✓ PATH REMOVED",
+        "correct"
+    );
+
+
+    drawBoard();
+
+
+    // ----------------------------------------
+    // LEVEL COMPLETE
+    // ----------------------------------------
+
+    if (remainingPaths.length === 0) {
+
+        completeLevel();
     }
-
-
-    statusMessage.textContent =
-        "PATH CLEARED ✓";
-
-
-    setTimeout(() => {
-
-        remainingPaths =
-            remainingPaths.filter(
-                p =>
-                    p.id !== path.id
-            );
-
-        updateProgress();
-        drawBoard();
-
-
-        if (
-            remainingPaths.length === 0
-        ) {
-
-            completeLevel();
-        }
-
-    }, 220);
 }
 
 
-/* =====================================================
-   WRONG MOVE
-===================================================== */
+// ============================================
+// LOSE LIFE
+// ============================================
 
-function wrongMove(path) {
+function loseLife() {
 
     lives--;
 
     updateLives();
 
 
-    gameBoard.classList.remove(
-        "board-shake"
-    );
-
-    void gameBoard.offsetWidth;
-
-    gameBoard.classList.add(
-        "board-shake"
-    );
-
-
-    statusMessage.textContent =
-        "BLOCKED — PATH CROSSES ANOTHER LINE";
-
-
     if (lives <= 0) {
 
         setTimeout(
             showGameOver,
-            450
+            400
         );
+
     }
+
 }
 
 
-/* =====================================================
-   LIVES
-===================================================== */
+// ============================================
+// UPDATE LIVES
+// ============================================
 
 function updateLives() {
 
     let hearts = "";
 
-    for (
-        let i = 0;
-        i < 3;
-        i++
-    ) {
+    for (let i = 0; i < 3; i++) {
 
-        hearts +=
-            i < lives
-                ? "❤️ "
-                : "🖤 ";
+        if (i < lives) {
+            hearts += "❤️ ";
+        } else {
+            hearts += "🖤 ";
+        }
 
     }
 
@@ -574,38 +527,42 @@ function updateLives() {
 }
 
 
-/* =====================================================
-   PROGRESS
-===================================================== */
+// ============================================
+// STATUS MESSAGE
+// ============================================
 
-function updateProgress() {
+function showStatus(message, type) {
 
-    const level =
-        levels[currentLevel];
+    statusMessage.textContent = message;
 
-    if (!level) {
-        return;
-    }
-
-    const total =
-        level.paths.length;
-
-    const removed =
-        total -
-        remainingPaths.length;
-
-    const percentage =
-        (removed / total) *
-        100;
-
-    progressFill.style.width =
-        `${percentage}%`;
+    statusMessage.className =
+        `status-message ${type}`;
 }
 
 
-/* =====================================================
-   LEVEL COMPLETE
-===================================================== */
+// ============================================
+// SHAKE BOARD
+// ============================================
+
+function shakeBoard() {
+
+    gameBoard.classList.remove(
+        "board-shake"
+    );
+
+    // Force browser reflow
+    void gameBoard.offsetWidth;
+
+    gameBoard.classList.add(
+        "board-shake"
+    );
+
+}
+
+
+// ============================================
+// COMPLETE LEVEL
+// ============================================
 
 function completeLevel() {
 
@@ -615,114 +572,142 @@ function completeLevel() {
     hiddenWord.textContent =
         level.word;
 
-    document.getElementById(
-        "completedWord"
-    ).textContent =
+    completedWord.textContent =
         level.word;
 
-    levelComplete.classList.remove(
-        "hidden"
+
+    setTimeout(
+        function () {
+
+            levelComplete.classList.remove(
+                "hidden"
+            );
+
+        },
+        500
     );
+
 }
 
 
-/* =====================================================
-   NEXT LEVEL
-===================================================== */
-
-function nextLevel() {
-
-    currentLevel++;
-
-    if (
-        currentLevel >=
-        levels.length
-    ) {
-
-        showFinalScreen();
-
-        return;
-    }
-
-
-    loadLevel();
-}
-
-
-/* =====================================================
-   GAME OVER
-===================================================== */
+// ============================================
+// GAME OVER
+// ============================================
 
 function showGameOver() {
 
     gameOver.classList.remove(
         "hidden"
     );
+
 }
 
 
-/* =====================================================
-   FINAL
-===================================================== */
+// ============================================
+// FINAL SCREEN
+// ============================================
 
 function showFinalScreen() {
 
     finalScreen.classList.remove(
         "hidden"
     );
+
 }
 
 
-/* =====================================================
-   BUTTONS
-===================================================== */
+// ============================================
+// HIDE OVERLAYS
+// ============================================
 
-retryButton.addEventListener(
-    "click",
-    () => {
+function hideAllOverlays() {
 
-        lives = 3;
+    gameOver.classList.add(
+        "hidden"
+    );
 
-        gameOver.classList.add(
-            "hidden"
-        );
+    levelComplete.classList.add(
+        "hidden"
+    );
 
-        loadLevel();
+    finalScreen.classList.add(
+        "hidden"
+    );
 
+}
+
+
+// ============================================
+// NEXT LEVEL
+// ============================================
+
+function goToNextLevel() {
+
+    currentLevel++;
+
+    hideAllOverlays();
+
+    if (currentLevel >= levels.length) {
+
+        showFinalScreen();
+
+        return;
     }
-);
+
+    loadLevel();
+}
 
 
-completeNextButton.addEventListener(
-    "click",
-    () => {
+// ============================================
+// RETRY
+// ============================================
 
-        levelComplete.classList.add(
-            "hidden"
-        );
+function retryGame() {
 
-        nextLevel();
+    lives = 3;
 
-    }
-);
+    hideAllOverlays();
 
-
-secretButton.addEventListener(
-    "click",
-    () => {
-
-        finalScreen.classList.add(
-            "hidden"
-        );
-
-        startGame();
-
-    }
-);
+    loadLevel();
+}
 
 
-/* =====================================================
-   START GAME
-===================================================== */
+// ============================================
+// BUTTON EVENTS
+// ============================================
+
+if (nextButton) {
+
+    nextButton.addEventListener(
+        "click",
+        goToNextLevel
+    );
+
+}
+
+
+if (completeNextButton) {
+
+    completeNextButton.addEventListener(
+        "click",
+        goToNextLevel
+    );
+
+}
+
+
+if (retryButton) {
+
+    retryButton.addEventListener(
+        "click",
+        retryGame
+    );
+
+}
+
+
+// ============================================
+// INITIALIZE
+// ============================================
 
 startGame();
